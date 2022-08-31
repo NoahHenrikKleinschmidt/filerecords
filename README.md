@@ -19,12 +19,6 @@ This will add *new* comments to file entries while preserving the old ones.
 records comment the_file -m "the message" -f flag1 flag2 ...
 ```
 
-or 
-
-```
-records add the_file -m "the message" -f flag1 flag2 ...
-```
-
 To remove a file or directory from the registry use:
 
 ```
@@ -48,12 +42,6 @@ To read a file's records use:
 
 ```
 records lookup the_file
-```
-
-or
-
-```
-records read the_file
 ```
 
 To search for files and directories based on flags or regex patterns use:
