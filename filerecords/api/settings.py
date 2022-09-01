@@ -1,6 +1,20 @@
 """
 Stores default settings for filerecords
 """
+import logging
+
+# ----------------------------------------------------------------
+#   General settings
+# ----------------------------------------------------------------
+
+log_level = logging.DEBUG
+"""The default logging level"""
+
+# ----------------------------------------------------------------
+#   Formatting settings
+# ----------------------------------------------------------------
+comment_format = lambda comment, name, timestamp : f"{comment}  |  {name} @ {timestamp.strftime('%Y-%m-%d %H:%M:%S')}"
+"""The default format in which comments shall be represented in markdown files. This must be a function accepting a `comment`, `name`, and `timestamp (datetime object)` argument and return a string."""
 
 # ----------------------------------------------------------------
 #   Basic files

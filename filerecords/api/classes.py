@@ -6,6 +6,7 @@ The registry is a hidden directory containing the recorded files and their metad
 
 from datetime import datetime
 import logging
+import shutil
 import uuid
 import os
 import pandas as pd
@@ -14,7 +15,7 @@ import pandas as pd
 import filerecords.api.utils as utils
 import filerecords.api.settings as settings
 
-logger = utils.log( level = logging.DEBUG )
+logger = utils.log()
 
 class BaseRecord:
     """
@@ -52,6 +53,23 @@ class BaseRecord:
         self.metafile = filename 
         self.metadata = utils.load_yamlfile( filename )
 
+    def lookup_last( self ) -> dict:
+        """
+        Get the last comment.
+
+        Returns
+        -------
+        dict
+            The last comment dictionary with timestamp as key, 
+            user and comment as values.
+        """
+        if len( self.metadata["comments"] ) == 0:
+            logger.info("No comments found.")
+            return None
+
+        last = sorted( list( self.comments.keys() ) )[-1]
+        return { last : self.metadata["comments"].get( last ) }
+
     def undo_comment( self ):
         """
         Undo the last comment.
@@ -63,6 +81,43 @@ class BaseRecord:
         """
         last = sorted( list( self.comments.keys() ) )[-1]
         self.metadata["comments"].pop( last )
+
+    def to_markdown( self, comments_header : bool = True ):
+        """
+        Convert the metadata to a markdown representation.
+
+        Parameters
+        ----------
+        comments_header : bool
+            Add a header above the comments.
+        """
+        # the [3:] is to remove the ../ in the relpath beginning 
+        # since every relpath starts at the base directory which is one
+        # level above the registry directory.
+
+        path = self.relpath[3:].replace( "_", "\_" )
+        text = f"### {path}\n\n"
+
+        if len( self.flags ) == 0:
+            flags = "No flags"
+        else:
+            flags = '\n- '.join( self.flags )
+        text += f"- {flags}\n\n"
+
+        if comments_header:
+            text += "#### Comments\n\n"
+
+        if len( self.comments ) == 0:
+
+            text += "No comments\n\n"
+
+        else:
+
+            for timestamp in self.comments:
+                comment, user = list( self.comments[timestamp].values() )
+                text += f"{settings.comment_format( comment, user, timestamp)}\n\n"
+            
+        return text
 
     @property
     def comments( self ) -> dict:
@@ -99,9 +154,28 @@ class BaseRecord:
                                                             } 
                                             }  )
 
-    
-    
-    def add_flags( self, flag : str or list ):
+    def remove_flags( self, flag : (str or list) ):
+        """
+        Remove one or more flags from the registry.
+
+        Note
+        ----
+        This will not automatically save the metadata,
+        use the save() method to do so.
+
+        Parameters
+        ----------
+        flag : str or list
+            The flag(s) to remove.
+        """
+        if not isinstance( flag, list ):
+            flag = [ flag ]
+        logger.debug( "Removing flags: {}".format( flag ) )
+
+        for f in flag:
+            self.metadata["flags"].remove( f )
+
+    def add_flags( self, flag : (str or list) ):
         """
         Add a new flag to the registry.
 
@@ -160,6 +234,54 @@ class Registry(BaseRecord):
         self.index.to_csv( self.indexfile, index = False, sep = "\t" )
         super().save()
 
+    def to_markdown( self, include_records : bool = False, timestamp : bool = False ):
+        """
+        Convert the metadata to a markdown representation.
+
+        Parameters
+        ----------
+        include_records : bool
+            Include the records in the markdown.
+        timestamp : bool
+            Add a timestamp in the markdown.
+
+        Returns
+        -------
+        str
+            The markdown representation of the registry.
+        """
+        # add basic information and timestamp of manifest creation
+        text = f"# {self.directory}\n\n"
+        if timestamp: 
+            text += f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+        
+        # add registry's own comments
+        text += "## Registry comments\n\n"
+        for timestamp in self.comments:
+            comment, user = list( self.comments[timestamp].values() )
+            text += f"{settings.comment_format( comment, user, timestamp)}\n\n"
+
+        # add all flags and flag groups
+        text += "## Registered flags\n\n"
+        for i in sorted( self.flags ):
+            text += f"- {i}\n"
+        text += "\n"
+
+        text += "### Flag groups\n\n"
+        text += "| Group | Flags |\n"
+        text += "|------|------|\n"
+        for label, flags in self.groups.items():
+            text += f"| {label} | {', '.join(flags)} |\n"
+
+        if include_records:
+            text += "\n"
+            text += "## Records\n\n"
+            for record in self.index.id:
+                record = FileRecord( self, id = record )
+                text += record.to_markdown( comments_header = False )
+
+        return text
+
     def _find_registry( self ):
         """
         Finds the local registry associated with the given directory.
@@ -174,6 +296,12 @@ class Registry(BaseRecord):
             registry_dir = os.path.join( self.directory, settings.registry_dir )
         
         return registry_dir
+
+    def base_has_registry( self ):
+        """
+        Checks if the current directory already has a registry.
+        """
+        return os.path.exists( os.path.join( self.directory, settings.registry_dir ) )
 
     def _load_registry( self ):
         """
@@ -242,7 +370,7 @@ class Registry(BaseRecord):
         self.metadata["groups"].update( { label : flags  } )
         self.add_flags( flags )
 
-    def add( self, filename : str, comment : str, flags : list = None ):
+    def add( self, filename : str, comment : str = None, flags : list = None ):
         """
         Add a new file to the registry.
 
@@ -258,21 +386,26 @@ class Registry(BaseRecord):
         if not os.path.exists( filename ):
             raise FileNotFoundError( f"File {filename} does not exist. Can only comment existing files..." )
         
+        if not comment and not flags:
+            raise ValueError( "No flags or comment given. At least one must be given." )
+
         record = FileRecord( registry = self, filename = filename )
         new_id = record.id
-        record.add_comment( comment )
+
+        if comment:
+            record.add_comment( comment )
     
         if flags:
             record.add_flags( flags )
         
-        index_entry = pd.DataFrame( { "id" : [new_id], "filename" : [filename], "relpath" : [record.relpath] } )
+        index_entry = pd.DataFrame( { "id" : [new_id], "filename" : [os.path.basename(filename)], "relpath" : [record.relpath] } )
         self.index = self.index.append( index_entry, ignore_index = True )
 
         record.save()
         logger.info( f"Added {filename} to the registry." )
 
 
-    def remove( self, filename : str ):
+    def remove( self, filename : str, keep_file : bool = False ):
         """
         Remove a file from the registry.
 
@@ -280,14 +413,24 @@ class Registry(BaseRecord):
         ----------
         filename : str
             The filename of the file to remove.
+        keep_file : bool
+            If True, the file will not be removed from the filesystem, only its records in the registry.
         """
         record = self.get_record( filename )
         if record is None:
             logger.warning( f"No record found for {filename}." )
             return
 
-        os.system( f"rm {record.metafile}" )
-        self.index = self.index[ self.index.filename != filename ]
+        if not keep_file:
+            if os.path.isfile( filename ):
+                os.remove( filename )
+            elif os.path.isdir( filename ):
+                shutil.rmtree( filename )
+            else:
+                logger.warning( f"{filename} is not a file or directory. Cannot remove." )
+
+        os.remove( record.metafile )
+        self.index = self.index[ self.index.id != record.id ]
         
         self.save()
         logger.info( f"Removed {filename} from the registry." )
@@ -359,7 +502,7 @@ class Registry(BaseRecord):
         
         return records
 
-    def move( self, current : str, new : str, move_file : bool = True ):
+    def move( self, current : str, new : str, keep_file : bool = False ):
         """
         Move a file to a new location.
 
@@ -369,9 +512,9 @@ class Registry(BaseRecord):
             The filename of the file to move.
         new : str
             The new filename to move the file to.
-        move_file : bool
-            If True the file moving will also be performed.
-            If False only the path reference is adjusted within the registry.
+        keep_file : bool
+            If True only the path reference is adjusted within the registry.
+            If False the file moving will also be performed.
         """
         record = self.get_record( current )
 
@@ -383,11 +526,19 @@ class Registry(BaseRecord):
             logger.warning( f"More than one record found for {current}, can only edit one record at a time." )
             return
 
-        path = os.path.relpath( current, self.registry_dir)
-        self.index.loc[ self.index.relpath == path, "relpath" ] = os.path.relpath( new, self.registry_dir )
+        # Note: the {}_path are relative to the registry dir and therefore
+        # registry internal, while the actual current and new are relative to the users
+        # current working directory and must not be altered for file moving...
 
-        if move_file:
-            os.system( f"mv {current} {new}" )
+        current_path = os.path.relpath( current, self.registry_dir )
+        new_path = os.path.relpath( new, self.registry_dir )
+        mask = self.index.relpath == current_path
+        
+        self.index.loc[ mask, "relpath" ] = new_path
+        self.index.loc[ mask, "filename" ] = os.path.basename( new )
+
+        if not keep_file:
+            os.rename( current, new )
 
         self.save()
 
@@ -501,6 +652,10 @@ class FileRecord(BaseRecord):
         Get the filename of the file record.
         """
         ids = self.registry.index.id.astype(str)
+
+        logger.debug( f"{ids=}" )
+        logger.debug( f"{self.id=}" )
+
         if str(self.id) in ids:
             return self.registry.index.loc[ids == str(self.id), "filename"].values[0]
         return os.path.basename( self.filename )
@@ -565,47 +720,7 @@ class Manifest:
             If none is provided a "registry.md" file is created in the registry's base directory.
         """
 
-        # add basic information and timestamp of manifest creation
-        self._markdown = f"# {self.registry.directory}\n\n"
-        self._markdown += f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
-        
-        # the format in which comment shall be included in the markdown file
-        comment_format = lambda comment, name, timestamp : f"{comment}  |  {name} @ {timestamp.strftime('%Y-%m-%d %H:%M:%S')}"
-
-        # add registry's own comments
-        self._markdown += "## Registry comments\n\n"
-        for timestamp in self.registry.comments:
-            comment, user = list( self.registry.comments[timestamp].values() )
-            text = f"{comment_format( comment, user, timestamp)}\n\n"
-            self._markdown += text
-
-
-        # add all flags and flag groups
-        self._markdown += "## Registered flags\n\n"
-        for i in sorted( self.registry.flags ):
-            self._markdown += f"- {i}\n"
-        self._markdown += "\n"
-
-        self._markdown += "### Flag groups\n\n"
-        self._markdown += "| Group | Flags |\n"
-        self._markdown += "|------|------|\n"
-        for label, flags in self.registry.groups.items():
-            self._markdown += f"| {label} | {', '.join(flags)} |\n"
-        self._markdown += "\n\n"
-
-        # add all records
-        self._markdown += "## Records \n\n---------\n\n"
-
-        for record in self.registry.index.id:
-            record = FileRecord( self.registry, id=record )
-            text += f"### {record.relpath[3:]}\n\n"
-            flags = '\n- '.join( record.flags )
-            text += f"- {flags}\n\n"
-            text += "#### Comments\n\n"
-            for timestamp in record.comments:
-                comment, user = list( record.comments[timestamp].values() )
-                text += f"{comment_format( comment, user, timestamp)}\n\n"
-            self._markdown += text
+        self._markdown = self.registry.to_markdown( include_records = True, timestamp = True )
 
         # now save the markdown file
         if filename is None:

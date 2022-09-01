@@ -11,7 +11,7 @@ import pandas as pd
 
 import filerecords.api.settings as settings
 
-def log( name : str = "filerecords", level : int = logging.INFO, outfile : str = None ):
+def log( name : str = "filerecords", level : int = None, outfile : str = None ):
     """
     A logger that can be used to log records.
 
@@ -24,6 +24,7 @@ def log( name : str = "filerecords", level : int = logging.INFO, outfile : str =
     outfile : str
         The file to log to. If None, logs to stdout.
     """
+    level = level if level else settings.log_level
     logger = logging.getLogger( name )
     logger.setLevel( level )
 
@@ -82,7 +83,7 @@ def find_registry( directory :str ):
 
         registry_dir = os.path.join( paths, settings.registry_dir )
         if os.path.exists( registry_dir ):
-            logger.info( f"Found registry in { os.path.dirname(registry_dir) }" )
+            logger.debug( f"Found registry in { os.path.dirname(registry_dir) }" )
             return registry_dir
 
         paths = os.path.dirname( paths )
