@@ -13,10 +13,10 @@ import filerecords.cli.list as list
 import filerecords.cli.list_local as list_local
 import filerecords.cli.lookup as lookup
 import filerecords.cli.read as read 
+import filerecords.cli.clear as clear
+import filerecords.cli.export as export
+import filerecords.cli.destroy as destroy
 
-# import filerecords.cli.erase as erase
-# import filerecords.cli.add as add
-# import filerecords.cli.edit as edit
 
 def setup():
     """
@@ -38,8 +38,9 @@ def setup():
     list_local.setup(subparsers)
     lookup.setup(subparsers)
     read.setup(subparsers)
-    
-    # erase.setup(subparsers)
+    clear.setup(subparsers)
+    export.setup(subparsers)
+    destroy.setup(subparsers)
     
 
     args = parser.parse_args()
