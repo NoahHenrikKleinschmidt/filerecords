@@ -51,4 +51,4 @@ def search( args ):
     for record in records:
         output += f"{record.relpath[3:]}  ({', '.join(record.flags)})\n"
 
-    print( output )
+    print( output.rstrip() )

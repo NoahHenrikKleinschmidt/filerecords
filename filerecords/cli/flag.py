@@ -23,7 +23,7 @@ def setup( parent ):
     """
     Set up the CLI
     """
-    descr = "Add flags to files or the registry itself (can also be done with records comment), and define flag groups (this command only)."
+    descr = "Add flags to files or the registry itself (can also be done with comment), and define flag groups (this command only)."
     parser = parent.add_parser( "flag", description = descr, help = descr )
     parser.add_argument( "filename", nargs = "?", help = "The file to comment. If left blank the comments are applied to the registry itself", default = None )
     parser.add_argument( "-f", "--flags", help = "Add flags.", nargs="+", default = None )

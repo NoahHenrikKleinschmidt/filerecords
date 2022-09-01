@@ -27,7 +27,7 @@ def setup( parent ):
     """
     Set up the CLI
     """
-    descr = "List file records."
+    descr = "List files in the current directory that have records."
     parser = parent.add_parser( "ls", description = descr, help = descr )
     parser.add_argument( "-f", "--flag", help = "The flag search for. Note, this may only be a single flag! To search for multiple flags at a time, define a flag group first and then search for it's label using 'group:your_group'.", default = None )
     parser.add_argument( "-e", "--pattern", help = "The regular expression to search for.", default = None )
@@ -56,4 +56,4 @@ def search( args ):
     for record in records:
         output += f"{record.relpath[3:]}  ({', '.join(record.flags)})\n"
 
-    print( output )
+    print( output.rstrip() )
