@@ -7,7 +7,7 @@ import logging
 #   General settings
 # ----------------------------------------------------------------
 
-log_level = logging.DEBUG
+log_level = logging.INFO
 """The default logging level"""
 
 # ----------------------------------------------------------------
@@ -20,7 +20,7 @@ comment_format = lambda comment, name, timestamp : f"{comment}  |  {name} @ {tim
 #   Basic files
 # ----------------------------------------------------------------
 
-registry_dir = "__registry"
+registry_dir = ".registry"
 """The directory to store the registry in"""
 
 indexfile = "INDEXFILE"
