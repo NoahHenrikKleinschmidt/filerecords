@@ -213,18 +213,22 @@ class Registry(BaseRecord):
         super().__init__()
 
         self.directory = os.path.abspath( directory ) 
+        
+        self._initialized = False
         self.registry_dir = self._find_registry()
 
         self.index = None
         self.indexfile = utils.get_indexfile( self.registry_dir )
         self.metafile = utils.get_metafile( self.registry_dir )
         
+
         self._load_registry()
 
     def init( self ):
         """
         Initialize a new registry in the given directory.
         """
+        self._initialized = True
         utils.make_new_registry( self.directory )
 
     def save( self ):
@@ -309,7 +313,6 @@ class Registry(BaseRecord):
         """
         self.index = utils.load_indexfile( self.indexfile )
         self.metadata = utils.load_yamlfile( self.metafile )
-
 
     def get_record( self, filename : str ):
         """
@@ -694,7 +697,7 @@ class Manifest:
         self._dict["directory"] = self.registry.directory
 
         records = [ FileRecord( self, id = id ) for id in self.registry.index.id ]
-        filepaths = self.registry.index.relpath.apply( lambda x: os.path.relpath( x, self.registry.directory ) ).values        
+        filepaths = self.registry.index.relpath.apply( lambda x: x[3:] ).values #os.path.relpath( os.path.abspath(x), self.registry.directory ) ).values        
         
         entry = lambda record, path : {
                                         "name" : os.path.basename( path ),
