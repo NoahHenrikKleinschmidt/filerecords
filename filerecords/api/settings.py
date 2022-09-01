@@ -15,6 +15,9 @@ indexfile = "INDEXFILE"
 registry_metafile = "METAFILE"
 """The name of the file storing the registry's own metadata - i.e. registry comments and the associated flags and flag groups."""
 
+registry_export_name = "registry"
+"""The default name of exported registry file(s) in yaml or markdown format"""
+
 # ----------------------------------------------------------------
 #   File architecture
 # ----------------------------------------------------------------
