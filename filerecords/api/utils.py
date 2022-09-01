@@ -82,7 +82,7 @@ def find_registry( directory :str ):
 
         registry_dir = os.path.join( paths, settings.registry_dir )
         if os.path.exists( registry_dir ):
-            logger.info( f"Found registry at {registry_dir}" )
+            logger.info( f"Found registry in { os.path.dirname(registry_dir) }" )
             return registry_dir
 
         paths = os.path.dirname( paths )
