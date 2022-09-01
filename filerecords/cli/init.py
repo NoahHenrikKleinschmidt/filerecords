@@ -40,11 +40,15 @@ def init( args ):
     """
     reg = api.Registry( "." )
 
-    if reg.base_has_registry():
+    if not reg._initialized and reg.base_has_registry():
         logger.info( "A registry already exists in this directory. Skipping initialization. Use the clear command to clear the registry." )
         return 
 
-    reg.init()
+    # the init of the Registry should have
+    # already taken care of this but just to be sure...
+    elif not reg._initialized:
+        reg.init()
+        
     if args.comment:
         reg.comment( args.comment )
 
