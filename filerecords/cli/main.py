@@ -50,3 +50,6 @@ def setup():
 
     else:
         args.func( args )
+
+if __name__ == "__main__":
+    setup()
