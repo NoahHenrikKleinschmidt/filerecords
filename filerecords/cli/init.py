@@ -48,9 +48,9 @@ def init( args ):
     # already taken care of this but just to be sure...
     elif not reg._initialized:
         reg.init()
-        
+
     if args.comment:
-        reg.comment( args.comment )
+        reg.add_comment( args.comment )
 
     if args.group:
         aux._register_groups( reg, args.group )
