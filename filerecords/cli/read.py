@@ -56,7 +56,7 @@ def read( args ):
             # if we have it installed, call glow to render the markdown
             subprocess.run( f"echo '{records}' | glow -" , shell = True )
            
-            
+        # if we don't have glow, just print the markdown normally...
         except RuntimeError:
 
             print( records )
