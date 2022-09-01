@@ -292,7 +292,7 @@ class Registry(BaseRecord):
         self.save()
         logger.info( f"Removed {filename} from the registry." )
 
-    def update( self, filename : str, comment : str = None, labels : (str or list) = None ):
+    def update( self, filename : str, comment : str = None, flags : (str or list) = None ):
         """
         Update an existing file record.
 
@@ -302,8 +302,8 @@ class Registry(BaseRecord):
             The filename of the file to update.
         comment : str
             The new comment to add to the file.
-        labels : str or list
-            The new labels to add to the file.
+        flags : str or list
+            The new flags to add to the file.
         """
         record = self.get_record( filename )
 
@@ -317,8 +317,8 @@ class Registry(BaseRecord):
 
         if comment:
             record.add_comment( comment )
-        if labels:
-            record.add_flags( labels )
+        if flags:
+            record.add_flags( flags )
 
         record.save()
         logger.info( f"Updated {filename} in the registry." )
@@ -507,3 +507,123 @@ class FileRecord(BaseRecord):
 
     def __repr__( self ):
         return f"FileRecord( id = {self.id}, filename = {self.filename} )"
+
+
+class Manifest:
+    """
+    This class assembles a YAML or markdown manifest of all recorded entries within a registry.
+    
+    Parameters
+    ---------- 
+    registry : Registry
+        The source registry.
+        {}
+    """
+    def __init__( self, registry : Registry ):
+        self.registry = registry
+        self._dict = None
+        self._markdown = None
+
+    def to_yaml( self, filename : str = None ):
+        """
+        Convert the source registry to a single YAML file.
+
+        Parameters
+        ----------
+        filename : str
+            The filename of the YAML file to create.
+            If none is provided a "registry.yaml" file is created.
+        """
+
+        self._dict = dict( self.registry.metadata )
+        self._dict["directory"] = self.registry.directory
+
+        records = [ FileRecord( self, id = id ) for id in self.registry.index.id ]
+        filepaths = self.registry.index.relpath.apply( lambda x: os.path.relpath( x, self.registry.directory ) ).values        
+        
+        entry = lambda record, path : {
+                                        "name" : os.path.basename( path ),
+                                        "path" : path,
+                                        "flags" : record.flags,
+                                        "comments" : record.comments
+                                    }
+        entries = { filepath : entry( record, filepath ) for record, filepath in zip( records, filepaths ) }
+        self._dict[ "records" ] = entries
+
+        if filename is None:
+            filename = f"{self.registry.directory}/{settings.registry_export_name}.yaml"
+        utils.save_yamlfile( filename, self._dict )
+
+    def to_markdown( self, filename : str = None ):
+        """
+        Convert the source registry to a markdown file summary.
+        
+        Parameters
+        ----------
+        filename : str
+            The name of the markdown file. 
+            If none is provided a "registry.md" file is created.
+        """
+        self._markdown = f"# {self.registry.directory}\n\n"
+        self._markdown += f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+        
+        self._markdown += "## Registry comments\n\n"
+        for i in self.registry.comments:
+            comment, name = list( self.registry.comments[i].values() )
+            text = f"{comment}  |  {name} @ {i.strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+            self._markdown += text
+
+        self._markdown += "## Registered flags\n\n"
+        for i in sorted( self.registry.flags ):
+            self._markdown += f"- {i}\n"
+        self._markdown += "\n"
+
+        self._markdown += "### Flag groups\n\n"
+        self._markdown += "| Group | Flags |\n"
+        self._markdown += "|------|------|\n"
+        for label, flags in self.registry.groups.items():
+            self._markdown += f"| {label} | {', '.join(flags)} |\n"
+        self._markdown += "\n\n"
+
+        self._markdown += "## Records \n\n---------\n\n"
+
+        for record in self.registry.index.id:
+            record = FileRecord( self.registry, id=record )
+            text += f"### {record.relpath[3:]}\n\n"
+            flags = '\n- '.join( record.flags )
+            text += f"- {flags}\n\n"
+            text += "#### Comments\n\n"
+            for timestamp in record.comments:
+                comment, user = list( record.comments[timestamp].values() )
+                text += f"{comment}  |  {user} @ {timestamp.strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+            self._markdown += text
+
+        if filename is None:
+            filename = f"{self.registry.directory}/{settings.registry_export_name}.md"
+        with open( filename, "w" ) as f:
+            f.write( self._markdown )
+
+
+    @property
+    def index( self ):
+        return self.registry.index
+    
+    @property
+    def metadata( self ):
+        return self.registry.metadata
+    
+    @property
+    def groups( self ):
+        return self.registry.groups
+    
+    @property
+    def directory( self ):
+        return self.registry.directory
+    
+    @property
+    def registry_dir( self ):
+        return self.registry.registry_dir
+    
+    @property
+    def flags( self ):
+        return self.registry.flags
