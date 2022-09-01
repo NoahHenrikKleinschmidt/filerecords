@@ -50,8 +50,10 @@ def make_new_registry( directory : str ):
     """
 
     registry_dir = os.path.join( directory, settings.registry_dir )
-    if not os.path.exists( registry_dir ):
-        os.mkdir( registry_dir )
+    if os.path.exists( registry_dir ):
+        raise FileExistsError( f"Registry already exists in {directory}" )
+    
+    os.makedirs( registry_dir )
 
     # add an INDEXFILE to the registry.
     indexfile = os.path.join( registry_dir, settings.indexfile )
