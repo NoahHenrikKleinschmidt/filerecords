@@ -186,6 +186,14 @@ def save_yamlfile( filename : str, contents : dict ):
     with open( filename, "w" ) as f:
         yaml.dump( contents, f )
 
+def add_registry_to_gitignore():
+    """
+    Add the registry directory to a .gitignore file in the current directory.
+    """
+    gitignore = os.path.join( os.getcwd(), ".gitignore" )
+    with open( gitignore, "a" ) as f:
+        f.write( f"\n{settings.registry_dir}" )
+
 def _init_metafile( registry_dir : str ):
     """
     Initialize a registry metadata file. 
