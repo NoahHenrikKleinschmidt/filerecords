@@ -564,15 +564,23 @@ class Manifest:
             The name of the markdown file. 
             If none is provided a "registry.md" file is created.
         """
+
+        # add basic information and timestamp of manifest creation
         self._markdown = f"# {self.registry.directory}\n\n"
         self._markdown += f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
         
+        # the format in which comment shall be included in the markdown file
+        comment_format = lambda comment, name, timestamp : f"{comment}  |  {name} @ {timestamp.strftime('%Y-%m-%d %H:%M:%S')}"
+
+        # add registry's own comments
         self._markdown += "## Registry comments\n\n"
-        for i in self.registry.comments:
-            comment, name = list( self.registry.comments[i].values() )
-            text = f"{comment}  |  {name} @ {i.strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+        for timestamp in self.registry.comments:
+            comment, user = list( self.registry.comments[timestamp].values() )
+            text = f"{comment_format( comment, user, timestamp)}\n\n"
             self._markdown += text
 
+
+        # add all flags and flag groups
         self._markdown += "## Registered flags\n\n"
         for i in sorted( self.registry.flags ):
             self._markdown += f"- {i}\n"
@@ -585,6 +593,7 @@ class Manifest:
             self._markdown += f"| {label} | {', '.join(flags)} |\n"
         self._markdown += "\n\n"
 
+        # add all records
         self._markdown += "## Records \n\n---------\n\n"
 
         for record in self.registry.index.id:
@@ -595,9 +604,10 @@ class Manifest:
             text += "#### Comments\n\n"
             for timestamp in record.comments:
                 comment, user = list( record.comments[timestamp].values() )
-                text += f"{comment}  |  {user} @ {timestamp.strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+                text += f"{comment_format( comment, user, timestamp)}\n\n"
             self._markdown += text
 
+        # now save the markdown file
         if filename is None:
             filename = f"{self.registry.directory}/{settings.registry_export_name}.md"
         with open( filename, "w" ) as f:
