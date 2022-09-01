@@ -532,7 +532,7 @@ class Manifest:
         ----------
         filename : str
             The filename of the YAML file to create.
-            If none is provided a "registry.yaml" file is created.
+            If none is provided a "registry.yaml" file is created in the registry's base directory.
         """
 
         self._dict = dict( self.registry.metadata )
@@ -562,7 +562,7 @@ class Manifest:
         ----------
         filename : str
             The name of the markdown file. 
-            If none is provided a "registry.md" file is created.
+            If none is provided a "registry.md" file is created in the registry's base directory.
         """
 
         # add basic information and timestamp of manifest creation
