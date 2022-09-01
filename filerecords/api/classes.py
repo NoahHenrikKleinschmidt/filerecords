@@ -213,7 +213,7 @@ class Registry(BaseRecord):
         super().__init__()
 
         self.directory = os.path.abspath( directory ) 
-        
+
         self._initialized = False
         self.registry_dir = self._find_registry()
 
@@ -328,9 +328,13 @@ class Registry(BaseRecord):
         FileRecord or list
             The record of the file or a list of records.
         """
+        logger.debug( f"{filename=}" )
         match = os.path.relpath( filename, self.registry_dir )
-        match = self.index["relpath"].str.contains( filename )
-        
+        logger.debug( f"{match=}" )
+
+        match = self.index.relpath == match 
+        logger.debug( f"{match=}" )
+
         if match.any():
 
             if match.sum() > 1:
@@ -636,6 +640,9 @@ class FileRecord(BaseRecord):
 
         # logger.debug( f"Registry index: {self.registry.index}" ) 
         ids = self.registry.index.id.astype(str)
+
+        logger.debug( f"{ids=}" )
+        logger.debug( f"{str(self.id)=}" )
 
         if str(self.id) in ids:
             return self.registry.index.loc[ids == str(self.id), "relpath"].values[0]
