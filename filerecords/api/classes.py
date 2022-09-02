@@ -193,7 +193,7 @@ class BaseRecord:
             flag = [ flag ]
         logger.debug( "Adding flags: {}".format( flag ) )
 
-        self.metadata["flags"].extend( flag )
+        self.metadata["flags"] += flag
         logger.debug( "(before set) metadata['flags']: {}".format( self.metadata["flags"] ) )
 
         self.metadata["flags"] = list( set( self.metadata["flags"] ) )
@@ -406,7 +406,7 @@ class Registry(BaseRecord):
             record.add_flags( flags )
         
         index_entry = pd.DataFrame( { "id" : [new_id], "filename" : [os.path.basename(filename)], "relpath" : [record.relpath] } )
-        self.index = self.index.append( index_entry, ignore_index = True )
+        self.index = pd.concat( [self.index, index_entry], ignore_index = True )
 
         record.save()
         logger.info( f"Added {filename} to the registry." )
@@ -627,7 +627,11 @@ class FileRecord(BaseRecord):
         """
         get_group_flags = lambda x: self.registry.groups[x] if x in self.registry.groups else [x]
         if isinstance( flags, list ):
-            flags = [ get_group_flags( flag ) for flag in flags ]
+            _flags = []
+            for flag in flags:
+                _flags += get_group_flags( flag )
+            flags = _flags
+            del _flags
         else:
             flags = get_group_flags( flags )
         super().add_flags( flags )
