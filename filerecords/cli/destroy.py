@@ -9,14 +9,6 @@ Usage:
     before removal. The ``-e`` option can be specified to export the records to a file. 
 """
 
-import shutil
-import filerecords.api as api
-import filerecords.api.settings as settings
-import filerecords.api.utils as utils
-import filerecords.cli.auxiliary as aux
-from datetime import datetime
-
-logger = utils.log()
 
 def setup( parent ):
     """
@@ -38,6 +30,14 @@ def destroy( args ):
     This is virtually the same as clear() 
     but will not initialize a new registry again...
     """
+    import shutil
+    import filerecords.api as api
+    import filerecords.api.settings as settings
+    import filerecords.api.utils as utils
+    from datetime import datetime
+
+    logger = utils.log()
+
     reg = api.Registry( "." )
 
     if args.export:

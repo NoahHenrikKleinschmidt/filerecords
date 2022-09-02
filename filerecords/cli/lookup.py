@@ -11,11 +11,6 @@ Usage
 """
 
 
-import filerecords.api as api
-import filerecords.api.utils as utils
-import filerecords.cli.auxiliary as aux
-
-logger = utils.log()
 
 def setup( parent ):
     """
@@ -30,6 +25,10 @@ def lookup( args ):
     """
     The core function to look up the latest comment.
     """
+    import filerecords.api as api
+    import filerecords.api.utils as utils
+    
+    logger = utils.log()
     reg = api.Registry( "." )
 
     if not args.filename:

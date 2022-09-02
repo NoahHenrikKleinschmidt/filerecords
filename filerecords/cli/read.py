@@ -11,13 +11,6 @@ Usage
 """
 
 
-import subprocess
-import filerecords.api as api
-import filerecords.api.utils as utils
-import filerecords.cli.auxiliary as aux
-
-logger = utils.log()
-
 def setup( parent ):
     """
     Set up the CLI
@@ -31,6 +24,11 @@ def read( args ):
     """
     The core function to read records.
     """
+    import subprocess
+    import filerecords.api as api
+    # import filerecords.api.utils as utils
+    
+    # logger = utils.log()
     reg = api.Registry( "." )
 
     if not args.filename:

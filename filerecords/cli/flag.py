@@ -13,12 +13,6 @@ Usage
 """
 
 
-import filerecords.api as api
-import filerecords.api.utils as utils
-import filerecords.cli.auxiliary as aux
-
-logger = utils.log()
-
 def setup( parent ):
     """
     Set up the CLI
@@ -35,6 +29,11 @@ def flag( args ):
     """
     The core function to add comments.
     """
+    import filerecords.api as api
+    import filerecords.cli.auxiliary as aux
+    # import filerecords.api.utils as utils
+
+    # logger = utils.log()
     reg = api.Registry( "." )
 
     # add any new groups to the registry.

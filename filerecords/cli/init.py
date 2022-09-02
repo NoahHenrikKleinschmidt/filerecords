@@ -16,11 +16,6 @@ Contrary to single flags, flag groups must be defined before they can be used.
 
 """
 
-import filerecords.api as api
-import filerecords.api.utils as utils
-import filerecords.cli.auxiliary as aux
-
-logger = utils.log()
 
 def setup( parent ):
     """
@@ -38,6 +33,12 @@ def init( args ):
     """
     The core function to initialize a new registry.
     """
+    import filerecords.api as api
+    import filerecords.cli.auxiliary as aux
+    import filerecords.api.utils as utils
+
+    logger = utils.log()
+
     reg = api.Registry( "." )
 
     if not reg._initialized and reg.base_has_registry():

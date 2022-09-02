@@ -12,13 +12,6 @@ Usage
     the file will remain while its records are removed.
 """
 
-import filerecords.api as api
-import filerecords.api.utils as utils
-import filerecords.cli.auxiliary as aux
-import os 
-
-logger = utils.log()
-
 def setup( parent ):
     """
     Set up the CLI
@@ -33,5 +26,9 @@ def remove( args ):
     """
     The core function to remove entries from the registry.
     """
+    import filerecords.api as api
+    # import filerecords.api.utils as utils
+        
+    # logger = utils.log()
     reg = api.Registry( "." )
     reg.remove( args.filename, keep_file = args.keep )

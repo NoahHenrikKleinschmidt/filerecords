@@ -12,12 +12,6 @@ Usage
     the file will remain unchanged while its records are adjusted.
 """
 
-import filerecords.api as api
-import filerecords.api.utils as utils
-import filerecords.cli.auxiliary as aux
-import os 
-
-logger = utils.log()
 
 def setup( parent ):
     """
@@ -34,5 +28,9 @@ def move( args ):
     """
     The core function to move / rename entries in the registry.
     """
+    import filerecords.api as api
+    # import filerecords.api.utils as utils
+
+    # logger = utils.log()
     reg = api.Registry( "." )
     reg.move( args.current, args.new, keep_file = args.keep )

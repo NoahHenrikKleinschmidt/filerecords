@@ -15,12 +15,6 @@ Usage
     When flags are specified, then only the flags are removed while the comments are left untouched.
 """
 
-import filerecords.api as api
-import filerecords.api.utils as utils
-import filerecords.cli.auxiliary as aux
-import os 
-
-logger = utils.log()
 
 def setup( parent ):
     """
@@ -36,6 +30,11 @@ def undo( args ):
     """
     The core function to undo comments or files.
     """
+    import filerecords.api as api
+    import filerecords.api.utils as utils
+
+    logger = utils.log()
+
     reg = api.Registry( "." )
     
     if args.flags and len(args.flags) == 1:

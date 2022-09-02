@@ -10,15 +10,6 @@ Usage:
     before clearing. The ``-e`` option can be specified to export the records to a file. 
 """
 
-import shutil
-import filerecords.api as api
-import filerecords.api.settings as settings
-import filerecords.api.utils as utils
-import filerecords.cli.auxiliary as aux
-from datetime import datetime
-
-logger = utils.log()
-
 def setup( parent ):
     """
     Set up the CLI
@@ -34,6 +25,14 @@ def clear( args ):
     """
     The core function to clear the registry.
     """
+    import shutil
+    import filerecords.api as api
+    import filerecords.api.settings as settings
+    import filerecords.api.utils as utils
+    from datetime import datetime
+
+    logger = utils.log()
+
     reg = api.Registry( "." )
 
     if args.export:

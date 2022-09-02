@@ -11,14 +11,6 @@ Usage:
     Note, `.yaml` and `.md` are added to the filename automatically.
 """
 
-import filerecords.api as api
-import filerecords.api.settings as settings
-import filerecords.api.utils as utils
-import filerecords.cli.auxiliary as aux
-from datetime import datetime
-
-logger = utils.log()
-
 def setup( parent ):
     """
     Set up the CLI
@@ -34,6 +26,12 @@ def export( args ):
     """
     The core function to export the registry.
     """
+    import filerecords.api as api
+    import filerecords.api.settings as settings
+    from datetime import datetime
+    # import filerecords.api.utils as utils
+
+    # logger = utils.log()
     reg = api.Registry( "." )
 
     if args.filename is None:

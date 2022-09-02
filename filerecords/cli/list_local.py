@@ -16,13 +16,6 @@ Usage
 
 """
 
-import os
-import filerecords.api as api
-import filerecords.api.utils as utils
-import filerecords.cli.auxiliary as aux
-
-logger = utils.log()
-
 def setup( parent ):
     """
     Set up the CLI
@@ -37,6 +30,13 @@ def search( args ):
     """
     The core function to search for entries in the local directory.
     """
+    
+    import os
+    import filerecords.api as api
+    import filerecords.api.utils as utils
+
+    logger = utils.log()
+
     reg = api.Registry( "." )
         
     records = reg.search( args.pattern, flag = args.flag )
