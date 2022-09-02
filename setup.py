@@ -11,7 +11,7 @@ setuptools.setup(
     description="A command-line toolbox to keep file metadata in an organized and easily accessible way.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="NONE YET",
+    url="https://github.com/NoahHenrikKleinschmidt/filerecords",
     
     # command_options={
     #   'nuitka': {
