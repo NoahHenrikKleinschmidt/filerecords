@@ -1,5 +1,7 @@
 # filerecords
 
+[![CodeFactor](https://www.codefactor.io/repository/github/noahhenrikkleinschmidt/filerecords/badge)](https://www.codefactor.io/repository/github/noahhenrikkleinschmidt/filerecords)
+
 `filerecords` is a python command line tool to better keep track of files and directories. It works similar to GIT but instead of keeping track of the actual file contents it keeps a registry of comments and flags. This allows users to comment their files and directories to add more detailed descriptions than just a good file name or directory name. 
 
 
