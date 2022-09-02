@@ -190,13 +190,13 @@ instead of the full `list` command.
 To only add a flag (but no comment) to a file use:
 
 ```
-records flag -f flag1 the_file
+records flag the_file -f flag1 
 ```
 
 > This could also be achieved using
 >
 > ```
-> records comment -f flag1 the_file
+> records comment the_file -f flag1 
 > ```
 
 To define new flag groups to the registry use:
