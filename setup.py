@@ -13,6 +13,32 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="NONE YET",
     
+    # command_options={
+    #   'nuitka': {
+    #      # boolean option, e.g. if you cared for C compilation commands
+    #      '--show-scons': True,
+    #      # options without value, e.g. enforce using Clang
+    #      '--clang': None,
+    #      # options with single values, e.g. enable a plugin of Nuitka
+    #      '--enable-plugin': "pyside2",
+    #      # options with several values, e.g. avoiding including modules
+    #      '--nofollow-import-to' : ["*.tests", "*.distutils", #],
+    #      #'--noinclude-custom-mode' : [
+    #                                     "matplotlib", 
+    #                                     "IPython", 
+    #                                     "bokeh", 
+    #                                     "sphinx",
+    #                                     "pytest",
+    #                                     "tkinter",
+    #                                     "sqlalchemy",
+    #                                     "jupyter",
+    #                                     "ipywidgets",
+    #                                     "PIL",
+    #                                     "PyQt5",
+    #                                 ]
+    #   }
+    # },
+    
     packages=setuptools.find_packages(),
 
     include_package_data=True,
