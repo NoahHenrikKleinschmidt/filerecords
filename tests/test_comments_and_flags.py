@@ -4,14 +4,22 @@ import shutil
 import subprocess
 import filerecords.api.settings as settings
 
-os.chdir( os.path.dirname( __file__ ) )
-shutil.rmtree( settings.registry_dir, ignore_errors = True )
 
-cmd = "records init"
-out = subprocess.run( cmd, shell=True, capture_output = True )
+def setup():
+    os.chdir( os.path.dirname( __file__ ) )
+    shutil.rmtree( settings.registry_dir, ignore_errors = True )
 
+    cmd = "records init"
+    out = subprocess.run( cmd, shell=True, capture_output = True )
+
+def cleanup():
+    shutil.rmtree( settings.registry_dir, ignore_errors = True )
+    os.system( "rm testfile*" )
+    os.system( "rm -rf testsubdir" )
 
 def test_comment_registry():
+
+    setup()
 
     cmd = "records comment -c 'testcomment'"
     out = subprocess.run( cmd, shell=True, capture_output = True )
@@ -23,7 +31,11 @@ def test_comment_registry():
 
     assert "testcomment" in contents, f"test comment appears not in metafile... {contents=}"
 
+    cleanup()
+
 def test_flag_registry():
+
+    setup()
 
     cmd = "records comment -f superflag1"
     out = subprocess.run( cmd, shell=True, capture_output = True )
@@ -35,13 +47,15 @@ def test_flag_registry():
 
     assert "superflag1" in contents, f"test flag appears not in metafile... {contents=}"
 
+    cleanup()
+
 def test_comment_firsttime_file():
 
-    cmd = "touch testfile ; records comment -c 'testcomment' testfile"
+    setup()
+
+    cmd = "touch testfile ; records comment -c 'testcomment' testfile ; sleep 1"
     out = subprocess.run( cmd, shell=True, capture_output = True )
-
-    assert out.returncode == 0, f"{out.returncode=} instead of 0"
-
+    
     with open( os.path.join( settings.registry_dir, settings.indexfile ), "r" ) as f:
         contents = f.read()
 
@@ -60,14 +74,17 @@ def test_comment_firsttime_file():
         contents = f.read()
     
     assert "testcomment" in contents
-
+    
+    cleanup()
 
 def test_comment_secondtime_file():
 
-    cmd = "records comment testfile -f superflag22"
-    out = subprocess.run( cmd, shell=True, capture_output = True )
+    setup()
 
-    assert out.returncode == 0, f"{out.returncode=} instead of 0"
+    cmd = "touch testfile ; records comment testfile -c 'thefirst' -f superflag22 ; sleep 1"
+    out = subprocess.run( cmd, shell=True, capture_output = True )
+    cmd = "records comment -c 'thesecond' testfile"
+    out = subprocess.run( cmd, shell=True, capture_output = True )
 
     regfile = os.listdir( settings.registry_dir )
     regfile.remove( settings.registry_metafile )
@@ -81,16 +98,25 @@ def test_comment_secondtime_file():
     with open( regfile, "r" ) as f:
         contents = f.read()
     
-    assert "testcomment" in contents, f"test comment appears not in metafile... {contents=}"
+    assert "thefirst" in contents, f"test comment appears not in metafile... {contents=}"
     assert "superflag22" in contents, f"test flag appears not in metafile... {contents=}"
+    assert "thesecond" in contents, f"test comment appears not in metafile... {contents=}"
+
+    cleanup()
+
 
 def test_comment_from_subdir():
     
+    setup()
 
-    cmd = "mkdir testsubdir ; cd testsubdir ; touch testfile; records comment testfile -c 'another testile' ; cd .. "
+    cmd = "touch testfile ; \
+            records comment -c 'upper' testfile ; \
+            mkdir testsubdir ; \
+            cd testsubdir ; \
+            touch testfile; \
+            records comment testfile -c 'lower' ; \
+            cd .. "
     out = subprocess.run( cmd, shell=True, capture_output = True )
-
-    assert out.returncode == 0, f"{out.returncode=} instead of 0"
 
     regfile = os.listdir( settings.registry_dir )
     regfile.remove( settings.registry_metafile )
@@ -103,14 +129,22 @@ def test_comment_from_subdir():
     
     assert "testsubdir" in contents, f"the subdir-located file does not appear with a proper path..."
 
-    os.system( "cd testsubdir ; records rm -k testfile" )
+    os.system( "rm -r testsubdir" )
+
+    cleanup()
 
 def test_comment_in_subdir():
 
-    cmd = "mkdir testsubdir ; cd testsubdir ; touch testfile; cd .. ; records comment testsubdir/testfile -c 'another testile' "
-    out = subprocess.run( cmd, shell=True, capture_output = True )
+    setup()
 
-    assert out.returncode == 0, f"{out.returncode=} instead of 0"
+    cmd = "touch testfile ; \
+            records comment testfile -f upper ; \
+            mkdir testsubdir ; \
+            cd testsubdir ; \
+            touch testfile ; \
+            cd .. ; \
+            records comment testsubdir/testfile -f lower"
+    out = subprocess.run( cmd, shell=True, capture_output = True )
 
     regfile = os.listdir( settings.registry_dir )
     regfile.remove( settings.registry_metafile )
@@ -125,8 +159,12 @@ def test_comment_in_subdir():
 
     os.system( "records rm -k testsubdir/testfile" )
 
+    cleanup()
+
 
 def test_flag_registry():
+
+    setup()
 
     cmd = "records flag -f superflag29"
     out = subprocess.run( cmd, shell=True, capture_output = True )
@@ -138,9 +176,13 @@ def test_flag_registry():
 
     assert "superflag29" in contents, f"test flag appears not in metafile... {contents=}"
 
+    cleanup()
+
 def test_flag_record():
 
-    cmd = "records flag testfile -f superflag29"
+    setup()
+
+    cmd = "touch testfile ; records flag testfile -f superflag29"
     out = subprocess.run( cmd, shell=True, capture_output = True )
 
     assert out.returncode == 0, f"{out.returncode=} instead of 0"
@@ -159,7 +201,11 @@ def test_flag_record():
     
     assert "superflag29" in contents, f"test flag appears not in metafile... {contents=}"
 
+    cleanup()
+
 def test_define_group():
+
+    setup()
 
     cmd = "records flag --group supergroup : super1 super7"
     out = subprocess.run( cmd, shell=True, capture_output = True )
@@ -174,7 +220,11 @@ def test_define_group():
     assert "super7" in contents, f"test flag appears not in metafile... {contents=}"
     assert "group:supergroup" in contents, f"group:testgroup flag appears not in metafile... {contents=}"
 
+    cleanup()
+
 def test_undo_flag():
+
+    setup()
 
     cmd = "records comment -c 'comment_to_leave' -f flag_to_undo"
     out = subprocess.run( cmd, shell=True, capture_output = True )
@@ -198,7 +248,11 @@ def test_undo_flag():
     assert "flag_to_undo" not in contents, f"test flag still appears in metafile... {contents=}"
     assert "comment_to_leave" in contents, f"test comment was also removed from metafile... {contents=}"
 
+    cleanup()
+
 def test_undo_comment():
+
+    setup()
 
     cmd = "records comment -c 'comment_to_undo' -f flag_to_leave"
     out = subprocess.run( cmd, shell=True, capture_output = True )
@@ -222,7 +276,4 @@ def test_undo_comment():
     assert "comment_to_undo" not in contents, f"test flag still appears in metafile... {contents=}"
     assert "flag_to_leave" in contents, f"test flag was also removed from metafile... {contents=}"
 
-
-shutil.rmtree( settings.registry_dir, ignore_errors = True )
-os.system( "rm testfile*" )
-os.system( "rm -rf testsubdir" )
+    cleanup()

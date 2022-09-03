@@ -4,7 +4,14 @@ import shutil
 import subprocess
 import filerecords.api.settings as settings
 
-os.chdir( os.path.dirname( __file__ ) )
+def setup():
+    os.chdir( os.path.dirname( __file__ ) )
+    shutil.rmtree( settings.registry_dir, ignore_errors = True )
+    cmd = "records init"
+    out = subprocess.run( cmd, shell=True, capture_output=True )
+
+def cleanup():
+    shutil.rmtree( settings.registry_dir, ignore_errors = True )
 
 def test_first_init():
 
@@ -13,45 +20,48 @@ def test_first_init():
     cmd = "records init"
     out = subprocess.run( cmd, shell=True, capture_output = True )
     
-    assert out.returncode == 0, f"{out.returncode=} instead of 0"
     assert os.path.exists( settings.registry_dir ), "registry is not being created!"
     assert os.path.exists( os.path.join( settings.registry_dir, settings.indexfile ) ), "registry indexfile is not being created!"
     assert os.path.exists( os.path.join( settings.registry_dir, settings.registry_metafile ) ), "registry metafile is not being created!"
 
+    cleanup()
+
 def test_second_init():
 
-    shutil.rmtree( settings.registry_dir, ignore_errors = True )
+    setup()
 
     cmd = "records init"
     out = subprocess.run( cmd, shell=True, capture_output=True )
-    out = subprocess.run( cmd, shell=True, capture_output=True )
     
-    assert out.returncode == 0, f"{out.returncode=} instead of 0"
     assert "already exists" in out.stdout.decode(), f"{out.stdout.decode()=} does not contain 'already exists'"
+
+    cleanup()
 
 def test_init_with_comment():
 
+    setup()
     shutil.rmtree( settings.registry_dir, ignore_errors = True )
 
-    cmd = "records init -c 'testcomment'"
+    cmd = "records init -c testcomment"
     out = subprocess.run( cmd, shell=True, capture_output = True )
     
-    assert out.returncode == 0, f"{out.returncode=} instead of 0"
     assert os.path.exists( settings.registry_dir ), "registry is not being created!"
     
     with open( os.path.join( settings.registry_dir, settings.registry_metafile ), "r" ) as f:
         contents = f.read()
 
-    assert "testcomment" in contents
+    assert "testcomment" in contents, f"{contents=} does not contain 'testcomment'"
+
+    cleanup()
 
 def test_init_with_flag_group():
 
+    setup()
     shutil.rmtree( settings.registry_dir, ignore_errors = True )
 
     cmd = "records init -g testgroup1 : test1 test2 -g testgroup2 : test3 test4"
     out = subprocess.run( cmd, shell=True, capture_output=True )
     
-    assert out.returncode == 0, f"{out.returncode=} instead of 0"
     assert os.path.exists( settings.registry_dir ), "registry is not being created!"
     
     with open( os.path.join( settings.registry_dir, settings.registry_metafile ), "r" ) as f:
@@ -60,9 +70,11 @@ def test_init_with_flag_group():
     assert "test1" in contents
     assert "group:testgroup2" in contents
 
+    cleanup()
 
 def test_init_with_flag_group_and_comment():
 
+    setup()
     shutil.rmtree( settings.registry_dir, ignore_errors = True )
 
     cmd = "records init -c 'testcomment' -g testgroup1 : test1 test2 -g testgroup2 : test3 test4"
@@ -78,31 +90,26 @@ def test_init_with_flag_group_and_comment():
     assert "test2" in contents
     assert "group:testgroup2" in contents
 
+    cleanup()
 
 def test_destroy():
 
-    shutil.rmtree( settings.registry_dir, ignore_errors = True )
-
-    cmd = "records init"
-    out = subprocess.run( cmd, shell=True, capture_output=True )
-    
-    assert out.returncode == 0, f"{out.returncode=} instead of 0"
-    assert os.path.exists( settings.registry_dir ), "registry is not being created!"
+    setup()
     
     cmd = "records destroy -y"
     out = subprocess.run( cmd, shell=True, capture_output=True )
     
-    assert out.returncode == 0, f"{out.returncode=} instead of 0"
     assert not os.path.exists( settings.registry_dir ), "registry is not being destroyed!"
+
+    cleanup()
 
 def test_clear():
 
-    shutil.rmtree( settings.registry_dir, ignore_errors = True )
+    setup()
 
-    cmd = "records init ; touch testfile ; records comment testfile -c 'testcomment' -f testing"
+    cmd = "touch testfile ; records comment testfile -c 'testcomment' -f testing"
     out = subprocess.run( cmd, shell=True, capture_output=True )
     
-    assert os.path.exists( settings.registry_dir ), "registry is not being created!"
     assert len( os.listdir( settings.registry_dir ) ) == 3, f"registry only contains {len( os.listdir( settings.registry_dir ) )} files instead of 3"
     
     cmd = "records clear -y"
@@ -111,8 +118,11 @@ def test_clear():
     assert os.path.exists( settings.registry_dir ), "registry is being removed!"
     assert len( os.listdir( settings.registry_dir ) ) == 2, f"registry only contains {len( os.listdir( settings.registry_dir ) )} files instead of 2"
     
+    cleanup()
+
 def test_make_new_in_subdir():
 
+    setup()
     shutil.rmtree( settings.registry_dir, ignore_errors = True )
 
     cmd = "records init ;\
@@ -123,7 +133,7 @@ def test_make_new_in_subdir():
             touch testfile_sub ; \
             records init ; \
             records comment testfile_sub -f testflag ; \
-            cd.. "
+            cd .. "
     out = subprocess.run( cmd, shell=True, capture_output=True )
 
     assert os.path.exists( settings.registry_dir ), "parent registry directory does not exist"
@@ -144,3 +154,4 @@ def test_make_new_in_subdir():
 
 
     os.system( "rm -rf testsubdir ; rm testfile*" )
+    cleanup()
