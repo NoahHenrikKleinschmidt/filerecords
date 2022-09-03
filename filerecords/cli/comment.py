@@ -33,10 +33,10 @@ def comment( args ):
 
     reg = api.Registry( "." )
 
-    # the add and update functions are expecting to find a string
-    # if noly one value is present...
-    if args.flags and len(args.flags) == 1:
-        args.flags = args.flags[0]
+    # # the add and update functions are expecting to find a string
+    # # if noly one value is present...
+    # if args.flags and len(args.flags) == 1:
+    #     args.flags = args.flags[0]
 
     if not args.filename:
 

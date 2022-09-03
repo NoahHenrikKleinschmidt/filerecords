@@ -44,8 +44,8 @@ def flag( args ):
 
     if args.flags:
 
-       if len(args.flags) == 1: 
-        args.flags = args.flags[0]
+    #    if len(args.flags) == 1: 
+    #     args.flags = args.flags[0]
 
         if not args.filename:
 
