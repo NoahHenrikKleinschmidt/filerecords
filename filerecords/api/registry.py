@@ -208,14 +208,13 @@ class Registry(base.BaseRecord):
 
         self.directory = os.path.abspath( directory ) 
 
-        self._initialized = False
-        self.registry_dir = self._find_registry()
-
         self.index = None
-        self.indexfile = utils.get_indexfile( self.registry_dir )
-        self.metafile = utils.get_metafile( self.registry_dir )
+
+        self._initialized = False
+        self._find_registry()
         
-        self._load_registry()
+        if not self._initialized:
+            self._load_registry()
 
     def init( self ):
         """
@@ -223,6 +222,9 @@ class Registry(base.BaseRecord):
         """
         self._initialized = True
         utils.make_new_registry( self.directory )
+
+        self.registry_dir = os.path.join( self.directory, settings.registry_dir ) 
+        self._load_registry()
 
     def save( self ):
         """
@@ -574,19 +576,21 @@ class Registry(base.BaseRecord):
         This will parse the directory hierarchy upwards until it finds a registry.
         If none are found it will initialize a new registry in the given directory.
         """
-        registry_dir = utils.find_registry( self.directory )
+        self.registry_dir = utils.find_registry( self.directory )
 
-        if registry_dir is None:
+        if self.registry_dir is None:
             logger.info( "No local registry found. Initializing a new registry." )
             self.init()
-            registry_dir = os.path.join( self.directory, settings.registry_dir )
+            self.registry_dir = os.path.join( self.directory, settings.registry_dir )
         
-        return registry_dir
         
     def _load_registry( self ):
         """
         Loads the registry data from the indexfile and metafile
         """
+        self.indexfile = utils.get_indexfile( self.registry_dir )
+        self.metafile = utils.get_metafile( self.registry_dir )
+
         self.index = utils.load_indexfile( self.indexfile )
         self.metadata = utils.load_yamlfile( self.metafile )
 
