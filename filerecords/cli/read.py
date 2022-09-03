@@ -33,7 +33,7 @@ def read( args ):
 
     if not args.filename:
 
-        records = reg.to_markdown()
+        records = reg.to_markdown( include_records = False )
 
     else:
 
