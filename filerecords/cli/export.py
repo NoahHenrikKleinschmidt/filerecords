@@ -29,18 +29,20 @@ def export( args ):
     import filerecords.api as api
     import filerecords.api.settings as settings
     from datetime import datetime
-    # import filerecords.api.utils as utils
-
-    # logger = utils.log()
+    # from filerecords.api.utils import log
+ 
+    # logger = log()
     reg = api.Registry( "." )
 
     if args.filename is None:
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         args.filename = f"{settings.registry_export_name}-{timestamp}"
-    man = api.Manifest( reg )
 
     if args.format == "yaml" or args.format == "both":
-        man.to_yaml( args.filename + ".yaml" )
+        reg.to_yaml( timestamp = True, filename = args.filename + ".yaml" )
 
     if args.format == "md" or args.format == "both":
-        man.to_markdown( args.filename + ".md" )
+        reg.to_markdown( timestamp = True, filename = args.filename + ".md" )
+
+    # logger.info( f"Exported registry to {args.filename}" )
+    print( f"Exported registry to {args.filename}" )

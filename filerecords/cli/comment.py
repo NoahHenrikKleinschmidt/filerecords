@@ -27,9 +27,9 @@ def comment( args ):
     The core function to add comments.
     """
     import filerecords.api as api
-    # import filerecords.api.utils as utils
+    # from filerecords.api.utils import log
 
-    # logger = utils.log()
+    # logger = log()
 
     reg = api.Registry( "." )
 
@@ -42,14 +42,23 @@ def comment( args ):
 
         if args.comment:
             reg.add_comment( args.comment )
+
         if args.flags:
             reg.add_flags( args.flags )
+
         reg.save()
         
     else:
 
         record = reg.get_record( args.filename )
         if record is None:
+
             reg.add( args.filename, comment = args.comment, flags = args.flags )
+            # logger.info( f"Added {args.filename} to the registry." )
+            print( f"Added {args.filename} to the registry." )
+
         else:
+
             reg.update( args.filename, comment = args.comment, flags = args.flags )
+            # logger.info( f"Updated {args.filename}'s records." )
+            print( f"Updated {args.filename}'s records." )

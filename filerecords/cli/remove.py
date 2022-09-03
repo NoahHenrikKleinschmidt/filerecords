@@ -27,8 +27,10 @@ def remove( args ):
     The core function to remove entries from the registry.
     """
     import filerecords.api as api
-    # import filerecords.api.utils as utils
+    # from filerecords.api.utils import log
         
-    # logger = utils.log()
+    # logger = log()
     reg = api.Registry( "." )
     reg.remove( args.filename, keep_file = args.keep )
+    # logger.info( f"Removed {args.filename} from the registry." )
+    print( f"Removed {args.filename} from the registry." )

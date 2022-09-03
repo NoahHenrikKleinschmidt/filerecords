@@ -2,4 +2,5 @@
 This is the core package of `filerecords`.
 """
 
-from .classes import Registry, FileRecord, Manifest
+from .registry import Registry
+from .file_record import FileRecord
