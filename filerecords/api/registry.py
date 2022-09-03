@@ -546,9 +546,12 @@ class Registry(base.BaseRecord):
         if include_records:
             text += "\n"
             text += "## Records\n\n"
-            for record in self.index.id:
-                record = file.FileRecord( self, id = record )
-                text += record.to_markdown( comments_header = False )
+            if len( self.index.id ) == 0:
+                text += "No records found."
+            else:
+                for record in self.index.id:
+                    record = file.FileRecord( self, id = record )
+                    text += record.to_markdown( comments_header = False )
 
         if filename is not None:
             with open( filename, "w" ) as f:
