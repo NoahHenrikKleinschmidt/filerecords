@@ -24,6 +24,7 @@ def setup( parent ):
     descr = "Initialize a new registry within the current directory."
     parser = parent.add_parser( "init", description = descr, help = descr )
     parser.add_argument( "-c", "--comment", help = "Add a comment or description to the registry", default = None )
+    parser.add_argument( "-f", "--flags", help = "Add flags.", nargs="+", default = None)
     parser.add_argument( "-g", "--group", help = "Add flag groups to the registry. Flag groups can be specified via '<name> : <flag1> <flag2>...' syntax. Note, this option specifies a single group. It can be supplied multiple times to specify multiple groups in one go.", nargs="+", action = "append", default = None )
     parser.add_argument ("-i", "--gitignore", help = "Add the registry to .gitignore", action = "store_true" )
     parser.set_defaults( func = init )
@@ -52,6 +53,9 @@ def init( args ):
 
     if args.comment:
         reg.add_comment( args.comment )
+    
+    if args.flags:
+        reg.add_flags( args.flags )
 
     if args.group:
         aux._register_groups( reg, args.group )
