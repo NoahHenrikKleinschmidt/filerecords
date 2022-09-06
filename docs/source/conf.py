@@ -58,6 +58,7 @@ html_logo = "logo_white.svg"
 
 html_theme_options = {
     'logo_only': True,
+    'style_nav_header_background' : "#343131ff",   
 
 }
 

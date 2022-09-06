@@ -1,3 +1,8 @@
+
+.. image:: logo_black.png
+
+
+
 This is `filerecords` - a command line tool to store metadata for files and directories to keep an easy overview over large projects.
 
 Inspired by GIT, `filerecords` allows adding files or directories to a "registry" that stores comments and flags. These can be later used to 
