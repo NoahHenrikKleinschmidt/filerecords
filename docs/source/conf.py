@@ -24,7 +24,30 @@ author = 'Noah Kleinschmidt'
 # The full version, including alpha/beta/rc tags
 release = '0.0.1'
 
-MOCK_MODULES = ['numpy', 'pandas', 'yaml', "filerecords" ]
+MOCK_MODULES = [ 'numpy', 'pandas', 'yaml'
+                'filerecords',
+                'filerecords.api.file_record',
+                'filerecords.api.registry',
+                'filerecords.api',
+                'filerecords.api.base',
+                'filerecords.api.utils',
+                'filerecords.api.settings',
+                'filerecords.cli.auxiliary',
+                'filerecords.cli.clear',
+                'filerecords.cli.comment',
+                'filerecords.cli.destroy',
+                'filerecords.cli.export',
+                'filerecords.cli.flag',
+                'filerecords.cli.init',
+                'filerecords.cli.list',
+                'filerecords.cli.list_local',
+                'filerecords.cli.lookup',
+                'filerecords.cli.main',
+                'filerecords.cli.move',
+                'filerecords.cli.read',
+                'filerecords.cli.remove',
+                'filerecords.cli.undo', 
+            ]
 autodoc_mock_imports = MOCK_MODULES 
 
 # -- General configuration ---------------------------------------------------
