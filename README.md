@@ -20,7 +20,7 @@ To add a comment about a file or directory use:
 This will add *new* comments to file entries while preserving the old ones.
 
 ```
-records comment the_file -m "the message" -f flag1 flag2 ...
+records comment the_file -c "the comment" -f flag1 flag2 ...
 ```
 
 To remove a file or directory from the registry use:
