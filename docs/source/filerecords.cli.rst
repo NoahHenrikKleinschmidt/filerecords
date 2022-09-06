@@ -37,7 +37,7 @@ These should be comments about the project itself. So, for example, if we want t
 
 whereas 
 
-   >>> records comment -c "This is a comment about the my data" my_datafile.tsv
+   >>> records comment -c "This is a comment about my data" my_datafile.tsv
 
 will add a comment about the file "my_datafile.tsv" specifically.
 
@@ -49,7 +49,7 @@ To initialize a new registry, run:
 
    >>> records init
 
-This will create a new directory called `.filerecords` in the current working directory (which is the heart of the registry).
+This will create a new hidden directory `.registry` in the current working directory (which is the heart of the registry).
 It is possible to also add comments and flags to the registry when initializing it. Also, flag groups can be added to the registry at this point.
 
 .. code-block:: bash
