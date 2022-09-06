@@ -15,6 +15,17 @@ records generation, lookup, and editing directly from within python scripts as w
    filerecords.api
 
 
+Why filerecords?
+----------------
+
+I study bioinformatics and keep project directories that are slightly too large for my taste, so I feel they become convoluted and not as easy to navigate as I would like (especially when revisiting a project after it has been finished).
+Hence, I usually keep some files in my project directories with descriptions about the important files and subdirectories, while moving unimportant / unneeded ones to "archive" directories.
+This is all a bit cumbersome, however, so I wrote this package to help standardize and automate the process a little.
+
+The basic idea behind it is that the user is able add comments and flags to their important directories or files as they are created, and then later search and read them - all directly from command line,
+without needing to worry where to save comments or how to format them. 
+
+
 Why use records - a short example
 ---------------------------------
 
