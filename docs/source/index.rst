@@ -25,6 +25,8 @@ Assume we have a large project directory containing various data directories, a 
 Maybe something like this below:
 
 
+.. code-block:: 
+   
    ___ base_directory
    |___ data
       |___ raw
