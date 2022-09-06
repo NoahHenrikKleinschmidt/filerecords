@@ -71,7 +71,7 @@ our project is about analysing gene set enrichments from some RNA-seq data, so w
    records init -c "the GSEA project from August 2022"
 
 
-Note
+.. note::
 
    On a technical note it is not required to first initialize a registry. This is because `filerecords` will search the filesystem
    for a an existing registry, and if none is found a new registry is automatically created in the current working directory. 

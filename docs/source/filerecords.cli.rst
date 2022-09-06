@@ -70,11 +70,11 @@ It is possible to also add comments and flags to the registry when initializing 
    -i, --gitignore       Add the registry to .gitignore
 
 
-Important
+.. note::
 
    Any subdirectory will automatically reference to this registry. However, new registries can be initialized. 
    On principle, a record is added to the closest upstream registry, relative to the current working directory.
-
+   Different registries to *not* communicate with each other.
 
 Adding records
 --------------
@@ -107,19 +107,19 @@ Flags can also be added using the `flag` comand instead.
 
    >>> records flag <filename> -f <some flag(s)>
 
-Important
+.. warning::
 
    Because `-f` (or `--flags`) accepts any number of flags as argument, they must come *after* the filename (or before the comment option `-c` in case of the `comment` command), otherwise the filename is considered one of the flags!
 
-   >>> records comment -c <some comment> -f <some flag(s)> <filename> # WRONG
+      >>> records comment -c <some comment> -f <some flag(s)> <filename> # WRONG
 
-   >>> records comment <filename> -c <some comment> -f <some flag(s)> # CORRECT
+      >>> records comment <filename> -c <some comment> -f <some flag(s)> # CORRECT
 
-   >>> records comment -f <some flag(s)> -c <some comment> <filename> # CORRECT
+      >>> records comment -f <some flag(s)> -c <some comment> <filename> # CORRECT
 
-   >>> records flag -f <some flag(s)> <filename> # WRONG
+      >>> records flag -f <some flag(s)> <filename> # WRONG
 
-   >>> records flag <filename> -f <some flag(s)> # CORRECT
+      >>> records flag <filename> -f <some flag(s)> # CORRECT
 
 .. code-block:: bash
 

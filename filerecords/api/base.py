@@ -1,9 +1,10 @@
 """
 This is the base class for the `filerecords` API classes.
 
-Note
-----
-This is not intended to be used directly.
+.. note::
+
+    This is not intended to be used directly.
+    
 """
 
 from datetime import datetime

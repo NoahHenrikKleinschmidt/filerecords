@@ -1,7 +1,7 @@
 The filerecords core
 ====================
 
-Note
+.. note::
 
    These are techincal records for other utility submodules of `filerecords`. 
    They are of no further concern to the user.

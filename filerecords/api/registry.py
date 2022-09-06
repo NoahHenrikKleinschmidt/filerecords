@@ -94,7 +94,7 @@ method can be used to find records based on their flags or on regex patterns in 
     records = reg.search( flag = "important", pattern = ".*\.bam" )
 
 
-Note
+.. note::
 
     Search always applies *and* logic to to the pattern and flag. Only a single flag is supported for searching.
     To include multiple flags in a search, first define a flag group and then search for the group's label flag.
