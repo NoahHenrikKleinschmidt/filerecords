@@ -145,7 +145,7 @@ Flag groups
 Flag groups are a way to group flags together. This is useful when you want to add multiple flags to a file, but don't want to type them all out.
 For example, if you have a flag group called "my_group" that contains the flags "flag1" and "flag2", you can add them to a file by doing
 
-   >>> records comment <filename> -g my_group
+   >>> records comment <filename> -f my_group
 
 However, for this to work, "my_group" needs to be defined first. This is the second job of the `flag` command.
 
