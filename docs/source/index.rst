@@ -7,14 +7,6 @@ Although the package is primarily designed for command line usage, there is a co
 records generation, lookup, and editing directly from within python scripts as well.
 
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-   filerecords.cli
-   filerecords.api
-
-
 Why filerecords?
 ----------------
 
@@ -171,6 +163,13 @@ This can be done using the `export` command. For instance, if we want to export 
 
 This will generate a markdown manifest of all comments and flags from both 
 the registry itself (base directory) as well as all sub-files and -directories recorded therein.
+
+.. toctree::
+   :maxdepth: 3
+   :caption: Contents:
+
+   filerecords.cli
+   filerecords.api
 
 
 Indices and tables
