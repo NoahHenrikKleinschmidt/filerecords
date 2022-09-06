@@ -1,5 +1,5 @@
 """
-Stores default settings for filerecords
+These are the default settings that control filerecords behavior.
 """
 import logging
 
