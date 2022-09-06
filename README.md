@@ -1,4 +1,5 @@
-# filerecords
+
+![](docs/source/logo_black.png)
 
 [![CodeFactor](https://www.codefactor.io/repository/github/noahhenrikkleinschmidt/filerecords/badge)](https://www.codefactor.io/repository/github/noahhenrikkleinschmidt/filerecords)
 
@@ -11,29 +12,29 @@
 Assume we have a large project directory containing various data directories, a scripts directory with subfolders, and directories for the results of analyses. Maybe something like this below:
 
 ```
-___ base_directory
- |___ data
-    |___ raw
-       |___ ...
-    |___ normalised
-       |___ ...
-    |___ QC
-       |___ ...
-    |___ gencode
-       |___ ...
- |___ scripts
-    |___ workflows
-       |___ ...
-    |___ env
-    |___ dev
-       |___ my_custom_package
-       |___ ...
- |___ results
-    |___ gsea
-       |___ ...
-    |___ reports
-       |___ ...
- |___ archive
+├─── base_directory
+      ├─── data
+      ├─── raw
+         ├─── ...
+      ├─── normalised
+         ├─── ...
+      ├─── QC
+         ├─── ...
+      ├─── gencode
+         ├─── ...
+   ├─── scripts
+      ├─── workflows
+         ├─── ...
+      ├─── env
+      ├─── dev
+         ├─── my_custom_package
+         ├─── ...
+   ├─── results
+      ├─── gsea
+         ├─── ...
+      ├─── reports
+         ├─── ...
+   ├─── archive
 ```
 
 If we name our files and directories properly we will ideally know everything about the contents just from looking at the filenames.
