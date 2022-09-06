@@ -248,12 +248,12 @@ class Registry(base.BaseRecord):
         FileRecord or list
             The record of the file or a list of records.
         """
-        logger.debug( f"{filename=}" )
+        logger.debug( f"filename={filename}" )
         match = os.path.relpath( filename, self.registry_dir )
-        logger.debug( f"{match=}" )
+        logger.debug( f"match={match}" )
 
         match = self.index.relpath == match 
-        logger.debug( f"{match=}" )
+        logger.debug( f"match={match}" )
 
         if match.any():
 

@@ -223,8 +223,8 @@ class FileRecord(base.BaseRecord):
         # logger.debug( f"Registry index: {self.registry.index}" ) 
         ids = self.registry.index.id.astype(str)
 
-        logger.debug( f"{ids=}" )
-        logger.debug( f"{str(self.id)=}" )
+        logger.debug( f"ids={ids}" )
+        logger.debug( f"str(self.id)={str(self.id)}" )
 
         if str(self.id) in ids:
             return self.registry.index.loc[ids == str(self.id), "relpath"].values[0]
@@ -245,8 +245,8 @@ class FileRecord(base.BaseRecord):
         """
         ids = self.registry.index.id.astype(str)
 
-        logger.debug( f"{ids=}" )
-        logger.debug( f"{self.id=}" )
+        logger.debug( f"ids={ids}" )
+        logger.debug( f"self.id={self.id}" )
 
         if str(self.id) in ids:
             return self.registry.index.loc[ids == str(self.id), "filename"].values[0]
