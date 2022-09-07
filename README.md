@@ -6,6 +6,9 @@
 
 `filerecords` is a python command line tool to better keep track of files and directories. It works similar to GIT but instead of keeping track of the actual file contents it keeps a registry of comments and flags. This allows users to comment their files and directories to add more detailed descriptions than just a good file name or directory name. 
 
+
+![](docs/source/example.gif)
+
 ## Short overview
 
 This is a brief listing of all commands. More details on their use can be found in the [documentation on readthedocs](https://filerecords.readthedocs.io/en/latest/).
