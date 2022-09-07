@@ -31,7 +31,7 @@ def search( args ):
     The core function to search for entries in the local directory.
     """
     
-    import os
+    import os, subprocess
     import filerecords.api as api
     import filerecords.api.utils as utils
 
@@ -44,7 +44,8 @@ def search( args ):
     # now restrict to those records that are stored in the current directory.
     # The current directory can either be specified by a path or be the base directory anway
     # in which case the relpath is empty.
-    current = os.path.relpath( os.getcwd(), reg.registry_dir )
+    current = subprocess.check_output( "pwd", shell = True ).decode() # os.getcwd() keeps resolving symbolic links and without shell the same here...
+    current = os.path.relpath( current.strip(), reg.registry_dir )
     logger.debug( f"{current=}")
     records = [ i for i in records if os.path.dirname( i.relpath ) == current ]
 
