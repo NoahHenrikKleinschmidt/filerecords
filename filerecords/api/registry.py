@@ -250,6 +250,9 @@ class Registry(base.BaseRecord):
         FileRecord or list
             The record of the file or a list of records.
         """
+        logger.debug( f"directory={self.directory}")
+        logger.debug( f"registry_dir={self.registry_dir}")
+        filename = os.path.join( self.directory, filename )
         logger.debug( f"filename={filename}" )
         match = os.path.relpath( filename, self.registry_dir )
         logger.debug( f"match={match}" )
@@ -311,16 +314,19 @@ class Registry(base.BaseRecord):
         if not comment and not flags:
             raise ValueError( "No flags or comment given. At least one must be given." )
 
+
         record = file.FileRecord( registry = self, filename = filename )
         new_id = record.id
 
+        logger.debug( f"adding: {filename} (filename = { os.path.basename(record.relpath) })" )
+        
         if comment:
             record.add_comment( comment )
     
         if flags:
             record.add_flags( flags )
         
-        index_entry = pd.DataFrame( { "id" : [new_id], "filename" : [os.path.basename(filename)], "relpath" : [record.relpath] } )
+        index_entry = pd.DataFrame( { "id" : [new_id], "filename" : [os.path.basename(record.relpath)], "relpath" : [record.relpath] } )
         self.index = pd.concat( [self.index, index_entry], ignore_index = True )
 
         record.save()
@@ -394,7 +400,7 @@ class Registry(base.BaseRecord):
         if not pattern and not flag:
             logger.warning( "No search criteria specified, returning all records." )
             records = [ file.FileRecord( self, id = id ) for id in self.index.id ]
-        
+
         return records
 
     def move( self, current : str, new : str, keep_file : bool = False ):
