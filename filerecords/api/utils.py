@@ -3,6 +3,7 @@ Utility functions for filerecords.
 """
 
 import logging
+import subprocess
 import yaml
 from yaml.loader import SafeLoader
 import os
@@ -80,7 +81,8 @@ def find_registry( directory :str ):
     str or None
         The path to the registry directory or None if no registry was found.
     """
-    paths = os.path.abspath( directory )
+    # paths = os.path.abspath( directory )
+    paths = subprocess.check_output( f"cd {directory} ; pwd", shell = True ).decode().strip()
     while True:
 
         registry_dir = os.path.join( paths, settings.registry_dir )

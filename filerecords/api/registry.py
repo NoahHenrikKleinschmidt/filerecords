@@ -176,6 +176,7 @@ or in yaml format using the `to_yaml()` method.
 from datetime import datetime
 import shutil
 import os
+import subprocess
 import pandas as pd
 
 
@@ -206,8 +207,9 @@ class Registry(base.BaseRecord):
     def __init__(self, directory : str = "." ):
         super().__init__()
 
-        self.directory = os.path.abspath( directory ) 
-
+        # self.directory = os.path.abspath( directory ) 
+        self.directory = subprocess.check_output( f"cd {directory} ; pwd", shell = True ).decode().strip()
+        
         self.index = None
 
         self._initialized = False
