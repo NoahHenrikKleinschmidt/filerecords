@@ -6,8 +6,7 @@
 
 `filerecords` is a python command line tool to better keep track of files and directories. It works similar to GIT but instead of keeping track of the actual file contents it keeps a registry of comments and flags. This allows users to comment their files and directories to add more detailed descriptions than just a good file name or directory name. 
 
-
-![](docs/source/example.gif)
+![example](https://user-images.githubusercontent.com/89252165/188868989-3d9b0682-c455-4ff2-a36e-0113d7049c3a.gif)
 
 ## Short overview
 
