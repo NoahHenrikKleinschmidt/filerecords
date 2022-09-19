@@ -218,12 +218,18 @@ class Registry(base.BaseRecord):
         if not self._initialized:
             self._load_registry()
 
-    def init( self ):
+    def init( self, permissions : (int or str) = None ):
         """
         Initialize a new registry in the given directory.
+
+        Parameters
+        ----------
+        permissions : int or str
+            The permissions to use for the registry directory. 
+            By default the permissions of the parent directory are used.
         """
         self._initialized = True
-        utils.make_new_registry( self.directory )
+        utils.make_new_registry( self.directory, perms = permissions )
 
         self.registry_dir = os.path.join( self.directory, settings.registry_dir ) 
         self._load_registry()

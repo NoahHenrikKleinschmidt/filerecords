@@ -40,7 +40,7 @@ def log( name : str = "filerecords", level : int = None, outfile : str = None ):
 
 logger = log()
 
-def make_new_registry( directory : str ):
+def make_new_registry( directory : str, perms : (int or str) = None ):
     """
     Make a new registry in a directory.
 
@@ -48,6 +48,10 @@ def make_new_registry( directory : str ):
     ----------
     directory : str
         The directory to create the registry in.
+    perms : int or str
+        The permissions to set on the registry directory. This can be either the 
+        numeric permissions (e.g. 755) or a string (e.g. "rwxr-xr-x").
+        By default the permissions are inherited by the parent directory.
     """
 
     registry_dir = os.path.join( directory, settings.registry_dir )
@@ -63,7 +67,31 @@ def make_new_registry( directory : str ):
     # add a METADATA file to the registry.
     _init_metafile( registry_dir )
 
+    # set the permissions 
+    if perms is None:
+        perms = get_directory_perms(directory)
+    os.system( f"chmod -R {perms} {registry_dir}" )
+
     logger.info( f"New registry created at {directory}" )
+
+def get_directory_perms(directory):
+    """
+    Get the permissions of the parent directory.
+    
+    Parameters
+    ----------
+    directory : str
+        The directory to get the permissions of the parent directory of.
+
+    Returns
+    -------
+    int
+        The permissions of the parent directory as numeric value.
+    """
+    perms = os.stat( directory ).st_mode
+    perms = oct( perms )[-3:]
+    perms = int( perms )
+    return perms
 
 
 def find_registry( directory :str ):
@@ -233,3 +261,5 @@ def _init_entryfile( registry_dir : str, id : str ):
     with open( entryfile, "w" ) as f:
         yaml.dump( settings.entryfile_template, f )
     
+    perms = get_directory_perms(registry_dir)
+    os.system( f"chmod -R {perms} {entryfile}" )
