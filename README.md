@@ -1,6 +1,7 @@
 
 ![](docs/source/logo_black.png)
 
+[![PyPI version](https://badge.fury.io/py/filerecords.svg)](https://badge.fury.io/py/filerecords)
 [![CodeFactor](https://www.codefactor.io/repository/github/noahhenrikkleinschmidt/filerecords/badge)](https://www.codefactor.io/repository/github/noahhenrikkleinschmidt/filerecords)
 [![Documentation Status](https://readthedocs.org/projects/filerecords/badge/?version=latest)](https://filerecords.readthedocs.io/en/latest/?badge=latest)
 
@@ -8,6 +9,12 @@
 It works similar to GIT but instead of keeping track of the actual file contents it keeps a registry of comments and flags. This allows users to comment their important files and directories to add more detailed descriptions than just a good file name or directory name. 
 
 ![example](https://user-images.githubusercontent.com/89252165/188868989-3d9b0682-c455-4ff2-a36e-0113d7049c3a.gif)
+
+filerecords can be directly installed via pip
+
+```
+pip install filerecords
+```
 
 ## Short overview
 
