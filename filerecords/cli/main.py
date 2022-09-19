@@ -22,7 +22,7 @@ def setup():
     """
     Setup the command line interface.
     """
-    descr = "This is `filerecords` – a command line tool for storing file metadata in a structured way."
+    descr = "filerecords – a command line tool for storing file metadata in a structured way."
     parser = argparse.ArgumentParser( description = descr )
     parser.add_argument("-v", "--version", action="store_true", help="Show version")
     subparsers = parser.add_subparsers(help="Available commands")
