@@ -46,7 +46,7 @@ def setup():
     args = parser.parse_args()
 
     if args.version:
-        print("filerecords version 0.1")
+        print("filerecords version 0.0.1")
 
     else:
         args.func( args )
