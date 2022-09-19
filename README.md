@@ -4,7 +4,8 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/noahhenrikkleinschmidt/filerecords/badge)](https://www.codefactor.io/repository/github/noahhenrikkleinschmidt/filerecords)
 [![Documentation Status](https://readthedocs.org/projects/filerecords/badge/?version=latest)](https://filerecords.readthedocs.io/en/latest/?badge=latest)
 
-`filerecords` is a python command line tool to better keep track of files and directories. It works similar to GIT but instead of keeping track of the actual file contents it keeps a registry of comments and flags. This allows users to comment their files and directories to add more detailed descriptions than just a good file name or directory name. 
+`filerecords` is a python command line tool to better keep track of files and directories for data science projects (or any kind of big directory structure). 
+It works similar to GIT but instead of keeping track of the actual file contents it keeps a registry of comments and flags. This allows users to comment their important files and directories to add more detailed descriptions than just a good file name or directory name. 
 
 ![example](https://user-images.githubusercontent.com/89252165/188868989-3d9b0682-c455-4ff2-a36e-0113d7049c3a.gif)
 

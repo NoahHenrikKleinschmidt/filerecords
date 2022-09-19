@@ -8,11 +8,12 @@ setuptools.setup(
     version="0.0.1",
     author="Noah H. Kleinschmidt",
     author_email="noah.kleinschmidt@students.unibe.ch",
-    description="A command-line toolbox to keep file metadata in an organized and easily accessible way.",
+    description="A command-line toolbox to keep file metadata in an organized and easily accessible way through comments and flags.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/NoahHenrikKleinschmidt/filerecords",
     
+    # the nuitka stuff is put on ice for the time being...
     # command_options={
     #   'nuitka': {
     #      # boolean option, e.g. if you cared for C compilation commands
@@ -59,5 +60,6 @@ setuptools.setup(
             "records=filerecords.cli:setup",
         ]
     },
+    
     python_requires='>=3.6',
 )
