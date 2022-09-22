@@ -105,6 +105,12 @@ To define new flag groups to the registry use:
 records flag -g group1 : flag1 flag2 -g group2 : flag3 flag4
 ```
 
+To vet if all recorded files exist at their recorded locations use:
+
+```
+records screen
+``` 
+
 To remove all file records from the registry use:
 
 ```
