@@ -41,10 +41,10 @@ def test_export_md():
     with open( mdfile, "r" ) as f:
         contents = f.read()
     
-    assert "registryflag" in contents, "registryflag not in list"
-    assert "secret_super_testfile" in contents, "secret_super_testfile not in list"
-    assert "great_other_testfile" in contents, "great_other_testfile not in list"
-    assert "upper" in contents, "upper not in list"
+    assert "registryflag" in contents, "registryflag not in the output"
+    assert "secret_super_testfile" in contents, "secret_super_testfile not in the output"
+    assert "great_other_testfile" in contents, "great_other_testfile not in the output"
+    assert "upper" in contents, "upper not in the output"
 
     cleanup() 
 
@@ -65,10 +65,10 @@ def test_export_md_withfilename():
     with open( mdfile, "r" ) as f:
         contents = f.read()
     
-    assert "registryflag" in contents, "registryflag not in list"
-    assert "secret_super_testfile" in contents, "secret_super_testfile not in list"
-    assert "great_other_testfile" in contents, "great_other_testfile not in list"
-    assert "upper" in contents, "upper not in list"
+    assert "registryflag" in contents, "registryflag not in the output"
+    assert "secret_super_testfile" in contents, "secret_super_testfile not in the output"
+    assert "great_other_testfile" in contents, "great_other_testfile not in the output"
+    assert "upper" in contents, "upper not in the output"
 
     cleanup() 
 
@@ -89,10 +89,10 @@ def test_export_yml():
     with open( yamlfile, "r" ) as f:
         contents = f.read()
     
-    assert "registryflag" in contents, "registryflag not in list"
-    assert "secret_super_testfile" in contents, "secret_super_testfile not in list"
-    assert "great_other_testfile" in contents, "great_other_testfile not in list"
-    assert "upper" in contents, "upper not in list"
+    assert "registryflag" in contents, "registryflag not in the output"
+    assert "secret_super_testfile" in contents, "secret_super_testfile not in the output"
+    assert "great_other_testfile" in contents, "great_other_testfile not in the output"
+    assert "upper" in contents, "upper not in the output"
 
     cleanup() 
 
@@ -113,10 +113,10 @@ def test_export_yml_with_filename():
     with open( yamlfile, "r" ) as f:
         contents = f.read()
     
-    assert "registryflag" in contents, "registryflag not in list"
-    assert "secret_super_testfile" in contents, "secret_super_testfile not in list"
-    assert "great_other_testfile" in contents, "great_other_testfile not in list"
-    assert "upper" in contents, "upper not in list"
+    assert "registryflag" in contents, "registryflag not in the output"
+    assert "secret_super_testfile" in contents, "secret_super_testfile not in the output"
+    assert "great_other_testfile" in contents, "great_other_testfile not in the output"
+    assert "upper" in contents, "upper not in the output"
 
     cleanup() 
 
