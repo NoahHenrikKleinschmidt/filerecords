@@ -179,6 +179,19 @@ Editing records
                            Any flags to remove.
 
 
+Moving and removing files
+-------------------------
+
+.. warning::
+
+   When a file is moved or removed through `mv` or `rm`, the records will **not** be adjusted automatically!
+
+      >>> mv <old_filename> <new_filename> # will NOT adjust the records
+
+      >>> rm <filename> # will NOT remove the file from records
+
+   Instead, `filerecords` offers its own `mv` and `rm` commands to move and remove files while adjusting the records accordingly.
+
 If a file needs to be moved to a different location, `filerecords` offers its own `mv` command that will move the file and adjust its records accordingly.
 
    >>> records mv <old_filename> <new_filename>
@@ -197,10 +210,13 @@ If a file needs to be moved to a different location, `filerecords` offers its ow
    -h, --help  show this help message and exit
    -k, --keep  Keep the file itself and only adjust the records. By default the file or directory itself is also moved.
 
-Note that the `mv` command will also move the file itself. If you only want to adjust the records, use the `-k` option.
-This is useful when a file has already been moved and now the records only need adjusting. 
+.. note::
 
-   >>> records mv -k <old_filename> <new_filename> # will not touch the files themselves. Only the records will be adjusted.
+   Note that the `mv` command will also move the file itself. If you only want to adjust the records, use the `-k` option.
+   When the `-k` option is specified, `filerecords` will not vet the provided filepaths and only adjust its internal records accordingly.
+   This is useful when a file has already been moved and now the records need retroactive adjusting. 
+
+      >>> records mv -k <old_filename> <new_filename> # will not touch the files themselves. Only the records will be adjusted.
 
 
 On the other hand, if a file should be removed from the records, use `rm` command. 
@@ -223,6 +239,30 @@ This will by default also remove the file itself but offers the `-k` option to l
    -h, --help  show this help message and exit
    -k, --keep  Keep the file itself and only remove the records. By default the file or directory itself is also removed.
 
+
+In order to keep an overview of the file movements of a project, `filerecords` additionally offers the `screen` command.
+The screen command will check if each recorded file exists at its recorded location and highlight any files that are not found.
+
+   >>> records screen
+
+The screen command also supports subsetting through flags or pattern matching, just like the `list` command (next section).
+
+   >>> records screen -f <some flag> # will only check files with the specified flag
+
+   >>> records screen -e <pattern> # will only check files that match the pattern
+
+.. code-block:: bash
+
+   usage: records screen [-h] [-f FLAG] [-e PATTERN]
+
+   Screen the recorded files at their recorded locations.
+
+   optional arguments:
+   -h, --help            show this help message and exit
+   -f FLAG, --flag FLAG  The flag search for. Note, this may only be a single flag! To search for multiple flags at a time, define a flag group
+                           first and then search for it's label using 'group:your_group'.
+   -e PATTERN, --pattern PATTERN
+                           The regular expression to search for.
 
 Accessing records
 -----------------
