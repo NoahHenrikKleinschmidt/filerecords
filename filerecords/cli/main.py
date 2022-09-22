@@ -16,7 +16,7 @@ import filerecords.cli.read as read
 import filerecords.cli.clear as clear
 import filerecords.cli.export as export
 import filerecords.cli.destroy as destroy
-
+import filerecords.cli.screen as screen
 
 def setup():
     """
@@ -39,6 +39,7 @@ def setup():
     list.setup(subparsers)
     list_local.setup(subparsers)
     export.setup(subparsers)
+    screen.setup(subparsers)
     clear.setup(subparsers)
     destroy.setup(subparsers)
     
