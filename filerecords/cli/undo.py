@@ -22,7 +22,7 @@ def setup( parent ):
     """
     descr = "Remove flags or the latest comment from a file or directory."
     parser = parent.add_parser( "undo", description = descr, help=descr )
-    parser.add_argument( "filename", nargs = "?", help = "The file whose metadata to undo. If left blank the actions are applied to the registry itself", default = None )
+    parser.add_argument( "filename", nargs = "*", help = "The file whose metadata to undo. If left blank the actions are applied to the registry itself", default = None )
     parser.add_argument( "-f", "--flags", help = "Any flags to remove.", nargs="+", default = None )
     parser.set_defaults( func = undo )
 
@@ -40,6 +40,17 @@ def undo( args ):
     if args.flags and len(args.flags) == 1:
         args.flags = args.flags[0]
     
+    if isinstance( args.filename, list ):
+        for filename in args.filename:
+            args.filename = filename
+            _undo_core( args, logger, reg )
+    else:
+        _undo_core( args, logger, reg )
+
+def _undo_core( args, logger, reg ):
+    """
+    The core function to undo comments or files.
+    """
     if not args.filename:
 
         if args.flags:

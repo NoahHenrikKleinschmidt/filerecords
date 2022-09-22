@@ -17,7 +17,7 @@ def setup( parent ):
     """
     descr = "Add comments to files or the registry itself."
     parser = parent.add_parser( "comment", description = descr, help = descr )
-    parser.add_argument( "filename", nargs = "?", help = "The file to comment. If left blank the comments are applied to the registry itself", default = None )
+    parser.add_argument( "filename", nargs = "*", help = "The file to comment. If left blank the comments are applied to the registry itself", default = None )
     parser.add_argument( "-c", "--comment", help = "Add a comment or description.", default = None )
     parser.add_argument( "-f", "--flags", help = "Add flags.", nargs="+", default = None )
     parser.set_defaults( func = comment )
@@ -38,8 +38,18 @@ def comment( args ):
     # if args.flags and len(args.flags) == 1:
     #     args.flags = args.flags[0]
 
+    if isinstance( args.filename, list ): 
+        for filename in args.filename:
+            args.filename = filename
+            _comment_core( args, reg )
+    else:
+        _comment_core( args, reg )
+        
+def _comment_core(args, reg):
+    """
+    The core function to add comments.
+    """
     if not args.filename:
-
         if args.comment:
             reg.add_comment( args.comment )
 
@@ -49,16 +59,13 @@ def comment( args ):
         reg.save()
         
     else:
-
         record = reg.get_record( args.filename )
         if record is None:
-
             reg.add( args.filename, comment = args.comment, flags = args.flags )
             # logger.info( f"Added {args.filename} to the registry." )
             print( f"Added {args.filename} to the registry." )
 
         else:
-
             reg.update( args.filename, comment = args.comment, flags = args.flags )
             # logger.info( f"Updated {args.filename}'s records." )
             print( f"Updated {args.filename}'s records." )

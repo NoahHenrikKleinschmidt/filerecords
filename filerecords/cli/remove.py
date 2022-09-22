@@ -18,7 +18,7 @@ def setup( parent ):
     """
     descr = "Remove files from the registry."
     parser = parent.add_parser( "rm", description = descr, help=descr )
-    parser.add_argument( "filename", help = "The file to remove." )
+    parser.add_argument( "filename", nargs = "+", help = "The file to remove." )
     parser.add_argument( "-k", "--keep", help = "Keep the file itself and only remove the records. By default the file or directory itself is also removed.", action = "store_true", default = False )
     parser.set_defaults( func = remove )
 
@@ -31,6 +31,12 @@ def remove( args ):
         
     # logger = log()
     reg = api.Registry( "." )
-    reg.remove( args.filename, keep_file = args.keep )
-    # logger.info( f"Removed {args.filename} from the registry." )
-    print( f"Removed {args.filename} from the registry." )
+
+    if isinstance( args.filename, list ):
+        for f in args.filename:
+            reg.remove( f, keep_file = args.keep )
+            print( f"Removed {f} from the registry." )
+    else:
+        reg.remove( args.filename, keep_file = args.keep )
+        print( f"Removed {args.filename} from the registry." )
+    
