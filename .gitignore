@@ -126,3 +126,4 @@ dmypy.json
 test.ipynb
 
 .registry
+tests/perform_all.py
