@@ -40,17 +40,6 @@ def undo( args ):
     if args.flags and len(args.flags) == 1:
         args.flags = args.flags[0]
     
-    if isinstance( args.filename, list ):
-        for filename in args.filename:
-            args.filename = filename
-            _undo_core( args, logger, reg )
-    else:
-        _undo_core( args, logger, reg )
-
-def _undo_core( args, logger, reg ):
-    """
-    The core function to undo comments or files.
-    """
     if not args.filename:
 
         if args.flags:
@@ -60,17 +49,28 @@ def _undo_core( args, logger, reg ):
 
         reg.save()
 
+    elif isinstance( args.filename, list ):
+        for filename in args.filename:
+            args.filename = filename
+            _undo_file( args, logger, reg )
+            
     else:
+        _undo_file( args, logger, reg )
 
-        record = reg.get_record( args.filename )
-        if record is None:
-            logger.error( f"No record for {args.filename}" )
-            return
-        
-        if args.flags:
-            record.remove_flags( args.flags )
-        else:
-            record.undo_comment()
-        
-        logger.info( f"Updated {args.filename} in the registry." )
-        record.save()
+def _undo_file( args, logger, reg ):
+    """
+    The core function to undo comments on files.
+    """
+
+    record = reg.get_record( args.filename )
+    if record is None:
+        logger.error( f"No record for {args.filename}" )
+        return
+    
+    if args.flags:
+        record.remove_flags( args.flags )
+    else:
+        record.undo_comment()
+    
+    logger.info( f"Updated {args.filename} in the registry." )
+    record.save()

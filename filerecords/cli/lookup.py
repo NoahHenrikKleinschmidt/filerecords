@@ -31,26 +31,33 @@ def lookup( args ):
     logger = utils.log()
     reg = api.Registry( "." )
 
-    if isinstance( args.filename, list ): 
-        for filename in args.filename:
-            args.filename = filename
-            _lookup_core( args, logger, reg )
-    else:
-        _lookup_core( args, logger, reg )
-
-def _lookup_core(args, logger, reg):
-    """
-    The core function to look up the latest comment.
-    """
     if not args.filename:
         last = reg.lookup_last()
         name = f"{reg.directory} (registry)"
+        _print_lookup(logger, last, name)
+
+    elif isinstance( args.filename, list ): 
+        for filename in args.filename:
+            args.filename = filename
+            _lookup_file( args, logger, reg )
 
     else:
-        record = reg.get_record( args.filename )
-        last = record.lookup_last() if record is not None else None
-        name = f"{args.filename} ({', '.join(record.flags)})" if record is not None else args.filename
+        _lookup_file( args, logger, reg )
 
+def _lookup_file(args, logger, reg):
+    """
+    The core function to look up the latest commentn from a file.
+    """
+    record = reg.get_record( args.filename )
+    last = record.lookup_last() if record is not None else None
+    name = f"{args.filename} ({', '.join(record.flags)})" if record is not None else args.filename
+
+    _print_lookup(logger, last, name)
+
+def _print_lookup(logger, last, name):
+    """
+    Print the latest comment.
+    """
     if last:
         timestamp = list( last.keys() )[0]
         logger.debug( f"{last[timestamp]=}" )

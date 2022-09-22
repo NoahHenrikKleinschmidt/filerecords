@@ -24,32 +24,42 @@ def read( args ):
     """
     The core function to read records.
     """
-    import subprocess
     import filerecords.api as api
     # import filerecords.api.utils as utils
     
     # logger = utils.log()
     reg = api.Registry( "." )
     
-    if isinstance( args.filename, list ): 
+    if not args.filename:
+        records = reg.to_markdown( include_records = False )
+        _print_records( records )
+
+    elif isinstance( args.filename, list ): 
         for filename in args.filename:
             args.filename = filename
-            _read_core( args, subprocess, reg )
+            _read_file( args, reg )
     else:
-        _read_core( args, subprocess, reg )
+        _read_file( args, reg )
 
-def _read_core(args, subprocess, reg):
+def _read_file(args, reg):
     """
     The core function to read records.
     """
-    if not args.filename:
-        records = reg.to_markdown( include_records = False )
+    
+    record = reg.get_record( args.filename )
+    records = record.to_markdown() if record is not None else None
 
-    else:
-        record = reg.get_record( args.filename )
-        records = record.to_markdown() if record is not None else None
+    _print_records( records )
+
+def _print_records( records ):
+    """
+    Print the records.
+    """
 
     if records:
+
+        import subprocess
+
         # we try to show the markdown file 
         # with glow rather than printing it out blankly...
         try:
@@ -64,3 +74,4 @@ def _read_core(args, subprocess, reg):
         # if we don't have glow, just print the markdown normally...
         except RuntimeError:
             print( records )
+

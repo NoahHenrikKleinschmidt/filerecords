@@ -40,28 +40,27 @@ def flag( args ):
     if args.group:
         aux._register_groups( reg, args.group )
 
-    # this bit is (almost) identical to the comment function
-    if isinstance( args.filename, list ): 
-        for filename in args.filename:
-            args.filename = filename
-            _flag_core( args, reg )
-    else:
-        _flag_core( args, reg )
-
-def _flag_core(args, reg):
-    """
-    The core function to add flags.
-    """
     if args.flags:
 
         if not args.filename:
             if args.flags:
                 reg.add_flags( args.flags )
             reg.save()
+        
+        elif isinstance( args.filename, list ): 
+            for filename in args.filename:
+                args.filename = filename
+                _flag_file( args, reg )
 
         else:
-            record = reg.get_record( args.filename )
-            if record is None:
-                reg.add( args.filename, flags = args.flags )
-            else:
-                reg.update( args.filename, flags = args.flags )
+            _flag_file( args, reg )
+
+def _flag_file(args, reg):
+    """
+    The core function to add flags to file records.
+    """
+    record = reg.get_record( args.filename )
+    if record is None:
+        reg.add( args.filename, flags = args.flags )
+    else:
+        reg.update( args.filename, flags = args.flags )

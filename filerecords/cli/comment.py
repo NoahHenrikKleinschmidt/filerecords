@@ -38,18 +38,8 @@ def comment( args ):
     # if args.flags and len(args.flags) == 1:
     #     args.flags = args.flags[0]
 
-    if isinstance( args.filename, list ): 
-        for filename in args.filename:
-            args.filename = filename
-            _comment_core( args, reg )
-    else:
-        _comment_core( args, reg )
-        
-def _comment_core(args, reg):
-    """
-    The core function to add comments.
-    """
     if not args.filename:
+
         if args.comment:
             reg.add_comment( args.comment )
 
@@ -58,14 +48,25 @@ def _comment_core(args, reg):
 
         reg.save()
         
+    elif isinstance( args.filename, list ): 
+        for filename in args.filename:
+            args.filename = filename
+            _comment_file( args, reg )
     else:
-        record = reg.get_record( args.filename )
-        if record is None:
-            reg.add( args.filename, comment = args.comment, flags = args.flags )
-            # logger.info( f"Added {args.filename} to the registry." )
-            print( f"Added {args.filename} to the registry." )
+        _comment_file( args, reg )
+        
+def _comment_file(args, reg):
+    """
+    The core function to add comments to files.
+    """
+    record = reg.get_record( args.filename )
 
-        else:
-            reg.update( args.filename, comment = args.comment, flags = args.flags )
-            # logger.info( f"Updated {args.filename}'s records." )
-            print( f"Updated {args.filename}'s records." )
+    if record is None:
+        reg.add( args.filename, comment = args.comment, flags = args.flags )
+        # logger.info( f"Added {args.filename} to the registry." )
+        print( f"Added {args.filename} to the registry." )
+
+    else:
+        reg.update( args.filename, comment = args.comment, flags = args.flags )
+        # logger.info( f"Updated {args.filename}'s records." )
+        print( f"Updated {args.filename}'s records." )
