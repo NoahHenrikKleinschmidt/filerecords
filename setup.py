@@ -5,7 +5,7 @@ with open( "README.md", "r" ) as fh:
 
 setuptools.setup(
     name="filerecords", 
-    version="0.0.1",
+    version="0.0.2",
     author="Noah H. Kleinschmidt",
     author_email="noah.kleinschmidt@students.unibe.ch",
     description="A command-line toolbox to keep file metadata in an organized and easily accessible way through comments and flags.",
